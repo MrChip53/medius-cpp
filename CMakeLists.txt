@@ -6,6 +6,6 @@ set(CMAKE_CXX_STANDARD 20)
 include(deps/uv.cmake)
 set(LIBUV_LIBRARIES uv)
 
-add_executable(medius_dme_server src/main.cpp)
+add_executable(medius_dme_server src/main.cpp src/MediusMessageParser.cpp src/MediusMessageParser.h src/RTPacket.h)
 
 target_link_libraries(medius_dme_server ${LIBUV_LIBRARIES})
