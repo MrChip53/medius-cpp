@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 2.8)
-project(libuv C)
 
 option(LIBUV_BUILD_TESTS "builds libuv tests and benchmarks if set to ON" OFF)
 
