@@ -7,22 +7,38 @@
 
 
 #include <cstring>
+#include <vector>
+
+typedef struct {
+    int command;
+    unsigned short length;
+    bool encrypted;
+    unsigned char mediusMessage[2048];
+} MediusMessage;
 
 class MediusMessageParser {
 public:
-    int command;
-    unsigned short length;
-    char* mediusMessage;
+    std::vector<MediusMessage> rt_messages;
 
     explicit MediusMessageParser(char* message) {
-        this->command = (unsigned char)message[0];
-        this->length = *(unsigned short*)(message+1);
-        this->mediusMessage = new char[length];
-        memcpy(this->mediusMessage, reinterpret_cast<const void *>(message + 3), this->length * sizeof(char));
-    }
+        int pos = 0;
+        int msglen = sizeof(message);
+        do {
+            MediusMessage thisMessage;
 
-    ~MediusMessageParser() {
-        delete[] this->mediusMessage;
+            thisMessage.command = *(unsigned char*)(message);
+            message++;
+            thisMessage.length = *(unsigned short*)(message);
+            message += 2;
+            if (thisMessage.length == 0) {
+                break;
+            }
+            memcpy(thisMessage.mediusMessage, message, thisMessage.length);
+            message += thisMessage.length;
+
+            rt_messages.push_back(thisMessage);
+        } while (pos < sizeof(message) - 1);
+
     }
 };
 
