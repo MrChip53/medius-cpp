@@ -242,7 +242,12 @@ void *socketThread(void *arg) {
             }
                 break;
             case 5: {
-                send(newSocket, message, read, 0);
+                auto packet_buffer = new unsigned char[length + 3];
+                packet_buffer[0] = command;
+                memcpy(&packet_buffer[1], &length, sizeof(unsigned short));
+                memcpy(&packet_buffer[3], &message, length);
+                send(newSocket, packet_buffer, length + 3, 0);
+                delete[] packet_buffer;
             }
                 break;
             case 13: {
