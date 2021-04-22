@@ -48,9 +48,13 @@ void *socketThread(void *arg) {
     while (running) {
         unsigned char command_bytes[1];
         unsigned char length_bytes[2];
-        char message[2048];
+        unsigned char message[2048];
         memset(message, 0, 2048);
         int totalRead = 0;
+
+        memset(command_bytes, 0, 1);
+        memset(length_bytes, 0, 2);
+        memset(message, 0, 2048);
 
         int read = recv(newSocket, command_bytes, 1, 0);
 
@@ -272,7 +276,7 @@ void *socketThread(void *arg) {
                 unsigned short target;
                 memcpy(&target, &message, sizeof(target));
 
-                auto *payload = new char[length - 2];
+                auto *payload = new unsigned char[length - 2];
                 memcpy(payload, &message[2], length - 2);
 
                 pthread_mutex_lock(&lock);

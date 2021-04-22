@@ -92,10 +92,10 @@ public:
         }
     }
 
-    void BroadcastMessage(const char *message, unsigned short sourceIndex, unsigned short length) {
+    void BroadcastMessage(const unsigned char *message, unsigned short sourceIndex, unsigned short length) {
         length += 2;
 
-        char *packet_buffer = new char[3 + length];
+        auto packet_buffer = new unsigned char[3 + length];
         memset(packet_buffer, 0, length + 3);
 
         packet_buffer[0] = 0x03;
@@ -114,8 +114,8 @@ public:
         delete[] packet_buffer;
     }
 
-    void SendTcpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const char *message, unsigned short length) {
-        char *packet_buffer = new char[5 + length];
+    void SendTcpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const unsigned char *message, unsigned short length) {
+        auto packet_buffer = new unsigned char[5 + length];
         memset(packet_buffer, 0, length + 5);
 
         unsigned short newLength = length + 2;
@@ -148,10 +148,10 @@ public:
         delete[] packet_buffer;
     }
 
-    void SendTcpAppList(const char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
+    void SendTcpAppList(const unsigned char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
         length += 2;
 
-        char *packet_buffer = new char[3 + length];
+        auto packet_buffer = new unsigned char[3 + length];
         memset(packet_buffer, 0, length + 3);
 
         packet_buffer[0] = 0x03;
@@ -161,7 +161,7 @@ public:
 
         for(const auto& player : this->_gameSockets) {
             //todo remove hardcoded flag value
-            if (player == NULL || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
                 continue;
             send(player->socket, packet_buffer, length + 3, 0);
         }
