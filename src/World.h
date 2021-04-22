@@ -73,7 +73,7 @@ public:
 
         memset(rt_packet.RSAKey, 0, 64);
 
-        char packet_buffer[3 + sizeof(RT_MSG_SERVER_CONNECT_NOTIFY)];
+        char packet_buffer[512];
         packet_buffer[0] = 8;
         unsigned short len = sizeof(RT_MSG_SERVER_CONNECT_NOTIFY);
         memcpy(&packet_buffer[1], &len, sizeof(unsigned short));
@@ -93,37 +93,33 @@ public:
     }
 
     void BroadcastMessage(const unsigned char *message, unsigned short sourceIndex, unsigned short length) {
-        length += 2;
+        int newLength = length + 2;
 
-        auto packet_buffer = new unsigned char[3 + length];
-        memset(packet_buffer, 0, length + 3);
+        unsigned char packet_buffer[512];
 
         packet_buffer[0] = 0x03;
-        memcpy(&packet_buffer[1], &length, sizeof(length));
-        memcpy(&packet_buffer[3], &sourceIndex, sizeof(sourceIndex));
-        memcpy(&packet_buffer[5], &message, sizeof(message));
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
 
         for(const auto& player : this->_gameSockets) {
             //todo remove hardcoded flag value
             if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || (player->recvFlags & 1) == 0)
                 continue;
             std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
-            send(player->socket, packet_buffer, length + 3, 0);
+            send(player->socket, packet_buffer, newLength + 3, 0);
         }
-
-        delete[] packet_buffer;
     }
 
     void SendTcpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const unsigned char *message, unsigned short length) {
-        auto packet_buffer = new unsigned char[5 + length];
-        memset(packet_buffer, 0, length + 5);
+        unsigned char packet_buffer[512];
 
         unsigned short newLength = length + 2;
 
         packet_buffer[0] = 0x03;
         memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
         memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
-        memcpy(&packet_buffer[5], &message, length + 2);
+        memcpy(&packet_buffer[5], message, length);
 
         printf("Target: %d\n", sourceIndex);
         std::cout << "Length: " << length << std::endl;
@@ -144,29 +140,24 @@ public:
         //todo remove hardcoded flag value
         if (this->_gameSockets[targetIndex] != nullptr || !this->_gameSockets[targetIndex]->authTime || this->_gameSockets[targetIndex]->clientIndex == sourceIndex || (this->_gameSockets[targetIndex]->recvFlags & 4) == 0)
             send(this->_gameSockets[targetIndex]->socket, packet_buffer, newLength + 3, 0);
-
-        delete[] packet_buffer;
     }
 
     void SendTcpAppList(const unsigned char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
-        length += 2;
+        int newLength = length + 2;
 
-        auto packet_buffer = new unsigned char[3 + length];
-        memset(packet_buffer, 0, length + 3);
+        char packet_buffer[512];
 
         packet_buffer[0] = 0x03;
-        memcpy(&packet_buffer[1], &length, sizeof(length));
-        memcpy(&packet_buffer[3], &sourceIndex, sizeof(sourceIndex));
-        memcpy(&packet_buffer[5], &message, sizeof(message));
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
 
         for(const auto& player : this->_gameSockets) {
             //todo remove hardcoded flag value
             if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
                 continue;
-            send(player->socket, packet_buffer, length + 3, 0);
+            send(player->socket, packet_buffer, newLength + 3, 0);
         }
-
-        delete[] packet_buffer;
     }
 };
 
