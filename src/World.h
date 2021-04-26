@@ -13,16 +13,46 @@
 #include <iostream>
 #include "RTPacket.h"
 
+typedef struct {
+    char message[512];
+    int length;
+} Message;
+
 class Player {
 public:
     int socket;
     unsigned short clientIndex;
     unsigned char recvFlags;
     unsigned long long authTime;
+    std::vector<Message*> messageQueue;
+
+    pthread_mutex_t messageQLock;
 
     Player(int sock, unsigned short clientIndex) {
         this->socket = sock;
         this->clientIndex = clientIndex;
+        pthread_mutex_init(&messageQLock, NULL);
+    }
+
+    void QueueMessage(Message *message) {
+        pthread_mutex_lock(&messageQLock);
+
+        messageQueue.push_back(message);
+
+        pthread_mutex_unlock(&messageQLock);
+    }
+
+    void ProcessQueue() {
+        pthread_mutex_lock(&messageQLock);
+
+        for(auto & message : messageQueue) {
+            send(socket, message->message, message->length, 0);
+            free(message);
+        }
+
+        messageQueue.clear();
+
+        pthread_mutex_unlock(&messageQLock);
     }
 
     void SetFlags(unsigned char flags) {
@@ -45,6 +75,7 @@ public:
     unsigned short _curClients = 0;
     unsigned short _totalClients = 0;
     std::array<Player*, 256> _gameSockets;
+    std::array<pthread_mutex_t, 256> _playerMutex;
 
     std::tuple<unsigned short, Player*> RegisterClientIndex(int socket) {
         //todo change the hardcoded 16
@@ -79,6 +110,10 @@ public:
         memcpy(&packet_buffer[1], &len, sizeof(unsigned short));
         memcpy(&packet_buffer[3], &rt_packet, sizeof(rt_packet));
 
+        auto message = (Message *)(malloc(sizeof(Message)));
+        memcpy(message->message, packet_buffer, len + 3);
+        message->length = len + 3;
+
         //todo change all these for loops to be < total online
         for(const auto& player : this->_gameSockets) {
             //todo remove hardcoded flag value
@@ -88,61 +123,11 @@ public:
                 continue;
             if (!player->HasFlag(8))
                 continue;
-            send(player->socket, packet_buffer, len + 3, 0);
+            player->QueueMessage(message);
         }
     }
 
-    void BroadcastMessage(const unsigned char *message, unsigned short sourceIndex, unsigned short length) {
-        int newLength = length + 2;
-
-        unsigned char packet_buffer[512];
-
-        packet_buffer[0] = 0x03;
-        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
-        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
-        memcpy(&packet_buffer[5], message, length);
-
-        for(const auto& player : this->_gameSockets) {
-            //todo remove hardcoded flag value
-            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || (player->recvFlags & 1) == 0)
-                continue;
-            std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
-            send(player->socket, packet_buffer, newLength + 3, 0);
-        }
-    }
-
-    void SendTcpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const unsigned char *message, unsigned short length) {
-        unsigned char packet_buffer[512];
-
-        unsigned short newLength = length + 2;
-
-        packet_buffer[0] = 0x03;
-        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
-        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
-        memcpy(&packet_buffer[5], message, length);
-
-        printf("Target: %d\n", sourceIndex);
-        std::cout << "Length: " << length << std::endl;
-        std::cout << "o medius message hashedChars:    " << std::endl;
-        for (int i = 0; i < length; i++) {
-            printf("\\%02hhx", (unsigned char) message[i]);
-        }
-        std::cout << std::endl;
-
-        std::cout << "new medius message hashedChars: " << std::endl;
-        for (int i = 0; i < newLength + 3; i++) {
-            printf("\\%02hhx", (unsigned char) packet_buffer[i]);
-        }
-        std::cout << std::endl;
-
-        std::cout << "Length: " << newLength << std::endl;
-
-        //todo remove hardcoded flag value
-        if (this->_gameSockets[targetIndex] != nullptr || !this->_gameSockets[targetIndex]->authTime || this->_gameSockets[targetIndex]->clientIndex == sourceIndex || (this->_gameSockets[targetIndex]->recvFlags & 4) == 0)
-            send(this->_gameSockets[targetIndex]->socket, packet_buffer, newLength + 3, 0);
-    }
-
-    void SendTcpAppList(const unsigned char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
+    void BroadcastMessage(const char *message, unsigned short sourceIndex, unsigned short length) {
         int newLength = length + 2;
 
         char packet_buffer[512];
@@ -152,11 +137,57 @@ public:
         memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
         memcpy(&packet_buffer[5], message, length);
 
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
+        for(const auto& player : this->_gameSockets) {
+            //todo remove hardcoded flag value
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || (player->recvFlags & 1) == 0)
+                continue;
+            std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
+            player->QueueMessage(rt_message);
+        }
+    }
+
+    void SendTcpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const char *message, unsigned short length) {
+        char packet_buffer[512];
+
+        unsigned short newLength = length + 2;
+
+        packet_buffer[0] = 0x03;
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
+
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
+        //todo remove hardcoded flag value, set player into player variable
+        if (this->_gameSockets[targetIndex] != nullptr || !this->_gameSockets[targetIndex]->authTime || this->_gameSockets[targetIndex]->clientIndex == sourceIndex || (this->_gameSockets[targetIndex]->recvFlags & 4) == 0)
+            this->_gameSockets[targetIndex]->QueueMessage(rt_message);
+    }
+
+    void SendTcpAppList(const char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
+        int newLength = length + 2;
+
+        char packet_buffer[512];
+
+        packet_buffer[0] = 0x03;
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
+
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
         for(const auto& player : this->_gameSockets) {
             //todo remove hardcoded flag value
             if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
                 continue;
-            send(player->socket, packet_buffer, newLength + 3, 0);
+            player->QueueMessage(rt_message);
         }
     }
 };
