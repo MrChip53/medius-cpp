@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.19)
+project(medius_dme_server)
 
 set(CMAKE_CXX_STANDARD 20)
 

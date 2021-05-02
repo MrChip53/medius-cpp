@@ -370,6 +370,7 @@ void *socketThread(void *arg) {
     pthread_exit(nullptr);
 }
 
+//todo refactor all of this
 int main() {
     int serverSocket, newSocket;
     struct sockaddr_in serverAddr;
