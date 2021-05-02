@@ -12,7 +12,7 @@
 #include <vector>
 #include <iostream>
 #include <atomic>
-#include "RTPacket.h"
+#include "../common/RTPacket.h"
 
 typedef struct {
     char message[512];

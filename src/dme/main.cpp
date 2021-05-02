@@ -11,7 +11,7 @@
 #include <sys/time.h>
 #include <vector>
 #include <netinet/tcp.h>
-#include "RTPacket.h"
+#include "../common/RTPacket.h"
 #include "World.h"
 
 pthread_mutex_t lock = PTHREAD_MUTEX_INITIALIZER;
