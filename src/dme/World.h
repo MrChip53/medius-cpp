@@ -11,6 +11,7 @@
 #include <sys/socket.h>
 #include <vector>
 #include <iostream>
+#include <atomic>
 #include "RTPacket.h"
 
 typedef struct {
@@ -20,9 +21,9 @@ typedef struct {
 
 class Player {
 public:
-    int socket;
-    unsigned short clientIndex;
-    unsigned char recvFlags;
+    std::atomic_int socket;
+    std::atomic_uint16_t clientIndex;
+    std::atomic_uchar recvFlags;
     unsigned long long authTime;
     std::vector<Message*> messageQueue;
 
@@ -34,12 +35,16 @@ public:
         pthread_mutex_init(&messageQLock, NULL);
     }
 
-    void QueueMessage(Message *message) {
+    /*void QueueMessage(Message *message) {
         pthread_mutex_lock(&messageQLock);
 
         messageQueue.push_back(message);
 
         pthread_mutex_unlock(&messageQLock);
+    }*/
+
+    void SendMessage(char *message, int length) {
+        send(this->socket, message, length, 0);
     }
 
     void ProcessQueue() {
@@ -71,7 +76,7 @@ public:
 class World {
 public:
     int _worldId;
-    unsigned long long _startTime;
+    std::atomic_ullong _startTime;
     unsigned short _curClients = 0;
     unsigned short _totalClients = 0;
     std::array<Player*, 256> _gameSockets;
@@ -123,7 +128,7 @@ public:
                 continue;
             if (!player->HasFlag(8))
                 continue;
-            player->QueueMessage(message);
+            player->SendMessage(packet_buffer, len + 3);
         }
     }
 
@@ -146,7 +151,7 @@ public:
             if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || (player->recvFlags & 1) == 0)
                 continue;
             std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
-            player->QueueMessage(rt_message);
+            player->SendMessage(packet_buffer, newLength + 3);
         }
     }
 
@@ -166,7 +171,7 @@ public:
 
         //todo remove hardcoded flag value, set player into player variable
         if (this->_gameSockets[targetIndex] != nullptr || !this->_gameSockets[targetIndex]->authTime || this->_gameSockets[targetIndex]->clientIndex == sourceIndex || (this->_gameSockets[targetIndex]->recvFlags & 4) == 0)
-            this->_gameSockets[targetIndex]->QueueMessage(rt_message);
+            this->_gameSockets[targetIndex]->SendMessage(packet_buffer, newLength + 3);
     }
 
     void SendTcpAppList(const char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
@@ -187,7 +192,7 @@ public:
             //todo remove hardcoded flag value
             if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
                 continue;
-            player->QueueMessage(rt_message);
+            player->SendMessage(packet_buffer, newLength + 3);
         }
     }
 };

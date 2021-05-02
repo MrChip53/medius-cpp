@@ -1,5 +1,4 @@
 #include<stdio.h>
-#include<stdlib.h>
 #include<sys/socket.h>
 #include<netinet/in.h>
 #include<string.h>
@@ -11,7 +10,7 @@
 #include <map>
 #include <sys/time.h>
 #include <vector>
-#include "MediusMessageParser.h"
+#include <netinet/tcp.h>
 #include "RTPacket.h"
 #include "World.h"
 
@@ -58,6 +57,10 @@ void *socketThread(void *arg) {
         //todo error check this
         fcntl(newSocket, F_SETFL, flags);
     }
+
+    int disable = 1;
+    int result = setsockopt(newSocket, IPPROTO_TCP, TCP_NODELAY, (char *) &disable, sizeof(int));
+    //todo error check if (result < 0)
 
     while (running) {
         int read;
@@ -261,18 +264,12 @@ void *socketThread(void *arg) {
                 }
                     break;
                 case 13: {
-                    pthread_mutex_lock(&lock);
-
                     thisPlayer->SetFlags(message[0]);
-
-                    pthread_mutex_unlock(&lock);
                 }
                     break;
                 case 45: {
                     unsigned int clientTime = *(unsigned int *) (message);
-                    pthread_mutex_lock(&lock);
                     unsigned int curTime = getTimeMillis() - thisWorld->_startTime;
-                    pthread_mutex_unlock(&lock);
 
                     char packet_buffer[11] = {0x2e, 0x08, 0x00};
                     memcpy(&packet_buffer[3], &clientTime, sizeof(clientTime));
@@ -282,9 +279,9 @@ void *socketThread(void *arg) {
                 }
                     break;
                 case 2: {
-                    pthread_mutex_lock(&lock);
+                    //pthread_mutex_lock(&lock);
                     thisWorld->BroadcastMessage(&message[0], clientIndex, length);
-                    pthread_mutex_unlock(&lock);
+                    //pthread_mutex_unlock(&lock);
                 }
                     break;
                 case 3: {
@@ -294,9 +291,9 @@ void *socketThread(void *arg) {
                     auto *payload = new char[length - 2];
                     memcpy(payload, &message[2], length - 2);
 
-                    pthread_mutex_lock(&lock);
+                    //pthread_mutex_lock(&lock);
                     thisWorld->SendTcpAppSingle(target, clientIndex, payload, length - 2);
-                    pthread_mutex_unlock(&lock);
+                    //pthread_mutex_unlock(&lock);
 
                     delete[] payload;
                 }
@@ -314,9 +311,9 @@ void *socketThread(void *arg) {
                         }
                     }
 
-                    pthread_mutex_lock(&lock);
+                    //pthread_mutex_lock(&lock);
                     thisWorld->SendTcpAppList(&message[1 + listsize], clientIndex, targets, length - 1 - listsize);
-                    pthread_mutex_unlock(&lock);
+                    //pthread_mutex_unlock(&lock);
 
                     delete[] mask;
                 }
@@ -364,8 +361,8 @@ void *socketThread(void *arg) {
             }
         }
 
-        if (thisPlayer != nullptr)
-            thisPlayer->ProcessQueue();
+        //if (thisPlayer != nullptr)
+        //    thisPlayer->ProcessQueue();
     }
     end:
     printf("Exit socketThread \n");
