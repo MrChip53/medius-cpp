@@ -30,7 +30,11 @@ set_property(TARGET liburing PROPERTY IMPORTED_LOCATION ${install_dir}/src/proje
 add_dependencies(liburing project_liburing)
 
 add_executable(medius_muis_server ${MUISDIR}/main.cpp
-                                  ${CMNDIR}/RTPacket.h)
+                                  ${CMNDIR}/RTPacket.h
+                                  ${CMNDIR}/database/DatabaseRepository.cpp
+                                  ${CMNDIR}/database/DatabaseRepository.h
+                                  ${CMNDIR}/database/models/UniverseModel.cpp
+                                  ${CMNDIR}/database/models/UniverseModel.h)
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 
