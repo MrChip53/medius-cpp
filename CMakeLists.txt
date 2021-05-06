@@ -9,3 +9,4 @@ include(deps/uv.cmake)
 set(LIBUV_LIBRARIES uv)
 
 include(${SRCDIR}/dme.cmake)
+include(${SRCDIR}/muis.cmake)
