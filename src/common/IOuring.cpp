@@ -158,7 +158,7 @@ void IOuring::ServerLoop() {
             break;
             case EVENT_TYPE_WRITE: {
                 for (int i = 0; i < req->iovec_count; i++) {
-                    free(req->iov[i].iov_base);
+                    delete[] req->iov[i].iov_base;
                 }
                 free(req);
             }

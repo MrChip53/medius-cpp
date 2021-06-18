@@ -102,7 +102,7 @@ int main() {
     ring = new IOuring(DEFAULT_SERVER_PORT);
     signal(SIGINT, sigint_handler);
 
-    mHandler->RegisterMessageHandler(0x24, RT_MSG_SERVER_HELLO::process);
+    mHandler->RegisterMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
 
     ring->SetMediusHandler(mHandler);
     ring->ServerLoop();

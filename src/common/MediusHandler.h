@@ -20,7 +20,7 @@ public:
     void ParseMessages(char * message);
     std::vector<struct iovec> ProcessMessages();
 
-    void RegisterMessageHandler(int msgType, struct iovec(*msg_func)(char* data));
+    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(char* data));
 
 private:
     std::vector<MediusMessage> rt_messages;

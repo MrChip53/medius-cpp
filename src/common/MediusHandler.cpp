@@ -4,11 +4,12 @@
 
 #include <cstring>
 #include <bits/types/struct_iovec.h>
+#include <iostream>
 #include "MediusHandler.h"
 
 void MediusHandler::ParseMessages(char *message) {
     int pos = 0;
-    int msglen = sizeof(message);
+
     do {
         MediusMessage thisMessage;
 
@@ -26,15 +27,22 @@ void MediusHandler::ParseMessages(char *message) {
     } while (pos < sizeof(message) - 1);
 }
 
-void MediusHandler::RegisterMessageHandler(int msgType, struct iovec (*msg_func)(char *)) {
-    msgCallbacks[msgType] = msg_func;
+void MediusHandler::RegisterMessageHandler(int msgRequest, struct iovec (*msg_func)(char *)) {
+    msgCallbacks[msgRequest] = msg_func;
 }
 
 std::vector<struct iovec> MediusHandler::ProcessMessages() {
     std::vector<struct iovec> iovs;
     for (int i = 0; i < rt_messages.size(); i++) {
-        struct iovec iov = msgCallbacks[rt_messages[i].command](reinterpret_cast<char *>(rt_messages[i].mediusMessage));
-        iovs.push_back(iov);
+        if (msgCallbacks[rt_messages[i].command] != nullptr) {
+            struct iovec iov = msgCallbacks[rt_messages[i].command](
+                    reinterpret_cast<char *>(rt_messages[i].mediusMessage));
+            iovs.push_back(iov);
+        } else {
+            std::cout << "Unhandled message: ";
+            printf("0x%02x", rt_messages[i].command);
+            std::cout << std::endl;
+        }
     }
     rt_messages.clear();
 
