@@ -34,7 +34,11 @@ add_executable(medius_muis_server ${MUISDIR}/main.cpp
                                   ${CMNDIR}/database/DatabaseRepository.cpp
                                   ${CMNDIR}/database/DatabaseRepository.h
                                   ${CMNDIR}/database/models/UniverseModel.cpp
-                                  ${CMNDIR}/database/models/UniverseModel.h)
+                                  ${CMNDIR}/database/models/UniverseModel.h
+                                  ${CMNDIR}/IOuring.cpp
+                                  ${CMNDIR}/IOuring.h
+                                  ${CMNDIR}/Util.cpp
+                                  ${CMNDIR}/Util.h ${CMNDIR}/MediusHandler.cpp ${CMNDIR}/MediusHandler.h ${CMNDIR}/BaseMessage.h ${CMNDIR}/MediusMessages/RT_MSG_SERVER_HELLO.h)
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 
