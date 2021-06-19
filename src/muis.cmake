@@ -38,7 +38,7 @@ add_executable(medius_muis_server ${MUISDIR}/main.cpp
                                   ${CMNDIR}/IOuring.cpp
                                   ${CMNDIR}/IOuring.h
                                   ${CMNDIR}/Util.cpp
-                                  ${CMNDIR}/Util.h ${CMNDIR}/MediusHandler.cpp ${CMNDIR}/MediusHandler.h ${CMNDIR}/MediusMessages/RT_MSG_SERVER_HELLO.h)
+                                  ${CMNDIR}/Util.h ${CMNDIR}/MediusHandler.cpp ${CMNDIR}/MediusHandler.h ${CMNDIR}/MediusMessages/RT_MSG_SERVER_HELLO.h ${CMNDIR}/Packets.h)
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 
