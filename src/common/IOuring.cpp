@@ -120,6 +120,11 @@ void IOuring::ServerLoop() {
             case EVENT_TYPE_ACCEPT: {
                 PostAcceptRequest(server_socket, &client_addr, &client_addr_len);
                 PostReadRequest(cqe->res);
+
+                std::shared_ptr<UserData> user(new UserData);
+                user->setSocketFd(cqe->res);
+                userDatas[cqe->res] = std::move(user);
+
                 free(req);
             }
             break;

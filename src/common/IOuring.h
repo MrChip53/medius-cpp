@@ -6,12 +6,16 @@
 #define MEDIUS_MUIS_SERVER_IOURING_H
 
 #include <liburing.h>
+#include <memory>
+#include <unordered_map>
 #include "MediusHandler.h"
+#include "UserData.h"
 
 class IOuring {
 private:
     int server_socket;
     MediusHandler *mediusHandler;
+    std::unordered_map<int, std::shared_ptr<UserData>> userDatas;
 
     int SetupListeningSocket(int port);
 

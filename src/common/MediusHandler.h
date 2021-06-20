@@ -11,20 +11,20 @@
 class MediusHandler {
 public:
     typedef struct {
-        int command;
-        unsigned short length;
+        int32_t command;
+        uint16_t length;
         bool encrypted;
-        unsigned char mediusMessage[2048];
+        uint8_t mediusMessage[2048];
     } MediusMessage;
 
     void ParseMessages(char * message);
     std::vector<struct iovec> ProcessMessages();
 
-    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(char* data));
+    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data));
 
 private:
-    std::vector<MediusMessage> rt_messages;
-    std::array<struct iovec(*)(char* data), 55> msgCallbacks;
+    std::vector<MediusHandler::MediusMessage> rt_messages;
+    std::array<struct iovec(*)(MediusHandler::MediusMessage), 55> msgCallbacks;
 };
 
 

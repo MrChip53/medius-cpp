@@ -27,7 +27,7 @@ void MediusHandler::ParseMessages(char *message) {
     } while (pos < sizeof(message) - 1);
 }
 
-void MediusHandler::RegisterMessageHandler(int msgRequest, struct iovec (*msg_func)(char *)) {
+void MediusHandler::RegisterMessageHandler(int msgRequest, struct iovec (*msg_func)(MediusHandler::MediusMessage)) {
     msgCallbacks[msgRequest] = msg_func;
 }
 
@@ -35,8 +35,7 @@ std::vector<struct iovec> MediusHandler::ProcessMessages() {
     std::vector<struct iovec> iovs;
     for (int i = 0; i < rt_messages.size(); i++) {
         if (msgCallbacks[rt_messages[i].command] != nullptr) {
-            struct iovec iov = msgCallbacks[rt_messages[i].command](
-                    reinterpret_cast<char *>(rt_messages[i].mediusMessage));
+            struct iovec iov = msgCallbacks[rt_messages[i].command](rt_messages[i]);
             iovs.push_back(iov);
         } else {
             std::cout << "Unhandled message: ";
