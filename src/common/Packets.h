@@ -28,6 +28,13 @@ public:
         char SessionKey[17];
         char AccessKey[17];
     } RT_MSG_CLIENT_CONNECT_TCP_EXTENDED;
+
+    typedef struct {
+        uint16_t WorldID;
+        int32_t ClientID;
+        uint16_t CurClients;
+        char IP[17];
+    } RT_MSG_SERVER_CONNECT_ACCEPT_TCP;
 };
 
 
