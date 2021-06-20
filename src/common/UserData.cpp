@@ -3,7 +3,3 @@
 //
 
 #include "UserData.h"
-
-void UserData::setSocketFd(int fd) {
-    socketFd = fd;
-}
