@@ -122,7 +122,7 @@ void IOuring::ServerLoop() {
                 PostReadRequest(cqe->res);
 
                 std::shared_ptr<UserData> user(new UserData);
-                user->setSocketFd(cqe->res);
+                user->SocketFd() = cqe->res;
                 userDatas[cqe->res] = std::move(user);
 
                 free(req);
@@ -144,7 +144,7 @@ void IOuring::ServerLoop() {
                 memcpy(buffer, req->iov[0].iov_base, req->iov[0].iov_len);
 
                 mediusHandler->ParseMessages(buffer);
-                iovs = mediusHandler->ProcessMessages();
+                iovs = mediusHandler->ProcessMessages(userDatas[client_socket]);
 
                 struct request *req = static_cast<request *>(Util::cmalloc(sizeof(*req) + sizeof(struct iovec) * iovs.size()));
                 req->iovec_count = iovs.size();

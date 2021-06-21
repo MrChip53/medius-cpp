@@ -7,6 +7,8 @@
 
 #include <vector>
 #include <array>
+#include <memory>
+#include "UserData.h"
 
 class MediusHandler {
 public:
@@ -18,13 +20,13 @@ public:
     } MediusMessage;
 
     void ParseMessages(char * message);
-    std::vector<struct iovec> ProcessMessages();
+    std::vector<struct iovec> ProcessMessages(const std::shared_ptr<UserData>& uData);
 
-    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data));
+    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
 
 private:
     std::vector<MediusHandler::MediusMessage> rt_messages;
-    std::array<struct iovec(*)(MediusHandler::MediusMessage), 55> msgCallbacks;
+    std::array<struct iovec(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&), 55> msgCallbacks;
 };
 
 
