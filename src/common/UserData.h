@@ -13,6 +13,7 @@ class UserData {
     uint32_t _WorldId;
     int32_t _AppId;
     std::string _Username;
+    std::string _IP;
 
 
 public:
@@ -24,6 +25,8 @@ public:
     auto AppId() const -> const int32_t& { return _AppId; }
     auto Username()       -> std::string&       { return _Username; }
     auto Username() const -> const std::string& { return _Username; }
+    auto IP()       -> std::string&       { return _IP; }
+    auto IP() const -> const std::string& { return _IP; }
 
 
 };

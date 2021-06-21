@@ -45,7 +45,7 @@ add_executable(medius_muis_server ${MUISDIR}/main.cpp
                                   ${CMNDIR}/Packets.h
                                   ${CMNDIR}/MediusMessages/RT_MSG_SERVER_CONNECT_ACCEPT_TCP.h
                                   ${CMNDIR}/UserData.cpp
-                                  ${CMNDIR}/UserData.h)
+                                  ${CMNDIR}/UserData.h ${CMNDIR}/MediusMessages/Messages.h)
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 

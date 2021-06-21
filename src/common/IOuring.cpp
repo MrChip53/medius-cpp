@@ -6,6 +6,8 @@
 #include "Util.h"
 #include <string.h>
 #include <netinet/in.h>
+#include <arpa/inet.h>
+#include <iostream>
 
 #define QUEUE_DEPTH             256
 #define READ_SZ                 8192
@@ -105,11 +107,11 @@ void IOuring::ServerLoop() {
 
     PostAcceptRequest(server_socket, &client_addr, &client_addr_len);
 
-    while (1) {
+    while (true) {
         int ret = io_uring_wait_cqe(&ring, &cqe);
         if (ret < 0)
             Util::fatal_error("io_uring_wait_cqe");
-        struct IOuring::request *req = (struct IOuring::request *) cqe->user_data;
+        auto *req = (struct IOuring::request *) cqe->user_data;
         if (cqe->res < 0) {
             fprintf(stderr, "Async request failed: %s for event: %d\n",
                     strerror(-cqe->res), req->event_type);
@@ -123,6 +125,14 @@ void IOuring::ServerLoop() {
 
                 std::shared_ptr<UserData> user(new UserData);
                 user->SocketFd() = cqe->res;
+
+                struct sockaddr_in addr;
+                socklen_t addr_size = sizeof(struct sockaddr_in);
+                int res = getpeername(cqe->res, (struct sockaddr *)&addr, &addr_size);
+                if (res == -1)
+                    std::cerr << "Error retrieving peers address!" << std::endl;
+                user->IP() = inet_ntoa(addr.sin_addr);
+
                 userDatas[cqe->res] = std::move(user);
 
                 free(req);
@@ -146,14 +156,14 @@ void IOuring::ServerLoop() {
                 mediusHandler->ParseMessages(buffer);
                 iovs = mediusHandler->ProcessMessages(userDatas[client_socket]);
 
-                struct request *req = static_cast<request *>(Util::cmalloc(sizeof(*req) + sizeof(struct iovec) * iovs.size()));
-                req->iovec_count = iovs.size();
-                req->client_socket = client_socket;
-                for (int i = 0; i < iovs.size(); i++) {
-                    req->iov[0].iov_base = iovs[i].iov_base;
-                    req->iov[0].iov_len = iovs[i].iov_len;
+                auto *outReq = static_cast<request *>(Util::cmalloc(sizeof(request) + sizeof(struct iovec) * iovs.size()));
+                outReq->iovec_count = iovs.size();
+                outReq->client_socket = client_socket;
+                for (auto & iov : iovs) {
+                    outReq->iov[0].iov_base = iov.iov_base;
+                    outReq->iov[0].iov_len = iov.iov_len;
                 }
-                PostWriteRequest(req);
+                PostWriteRequest(outReq);
 
                 free(req->iov[0].iov_base);
                 free(req);
@@ -163,6 +173,7 @@ void IOuring::ServerLoop() {
             break;
             case EVENT_TYPE_WRITE: {
                 for (int i = 0; i < req->iovec_count; i++) {
+                    //TODO change this back to a malloc/free. IDK what this warning actually means
                     delete[] req->iov[i].iov_base;
                 }
                 free(req);

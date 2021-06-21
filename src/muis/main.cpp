@@ -10,7 +10,7 @@
 #include "../common/IOuring.h"
 #include "../common/Util.h"
 
-#include "../common/MediusMessages/RT_MSG_SERVER_HELLO.h"
+#include "../common/MediusMessages/Messages.h"
 
 #define DEFAULT_SERVER_PORT     10071
 
@@ -103,6 +103,7 @@ int main() {
     signal(SIGINT, sigint_handler);
 
     mHandler->RegisterMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
+    mHandler->RegisterMessageHandler(RT_MSG_SERVER_CONNECT_ACCEPT_TCP::Request, RT_MSG_SERVER_CONNECT_ACCEPT_TCP::process);
 
     ring->SetMediusHandler(mHandler);
     ring->ServerLoop();

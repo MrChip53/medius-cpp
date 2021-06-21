@@ -15,21 +15,21 @@ public:
     static struct iovec process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
         iovec iov;
 
-        void* recvPacket;
-        bool extendedPacket = false;
-
         if (data.length > sizeof(Packets::RT_MSG_CLIENT_CONNECT_TCP)) {
-            extendedPacket = true;
-            recvPacket = new Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED();
-            memcpy(recvPacket, data.mediusMessage, sizeof(Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED));
+            //Extended packet
+            uData->AppId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->AppId;
+            uData->WorldId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->TargetWorldId;
+            //TODO verify and store session and access keys
         } else {
-            recvPacket = new Packets::RT_MSG_CLIENT_CONNECT_TCP();
-            memcpy(recvPacket, data.mediusMessage, sizeof(Packets::RT_MSG_CLIENT_CONNECT_TCP));
+            //Normal packet
+            uData->AppId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->AppId;
+            uData->WorldId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->TargetWorldId;
         }
 
-        Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP *packet = static_cast<Packets::RT_MSG_SERVER_HELLO *>(malloc(sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP)));
+        Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP *packet = static_cast<Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP *>(malloc(sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP)));
         memset(packet, 0, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP));
         packet->CurClients = 0x01;
+        strcpy(packet->IP, uData->IP().c_str());
 
         iov.iov_len = sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP) + 3;
         char *buffer = new char[sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP) + 3];
@@ -37,7 +37,7 @@ public:
         buffer[1] = (uint16_t)sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP);
         memcpy(&buffer[3], packet, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP));
         free(packet);
-        delete recvPacket;
+
         iov.iov_base = buffer;
         return iov;
     }
