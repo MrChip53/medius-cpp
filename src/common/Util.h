@@ -6,11 +6,15 @@
 #define MEDIUS_MUIS_SERVER_UTIL_H
 
 
+#include <vector>
+#include <string>
+
 class Util {
 public:
     static void fatal_error(const char *syscall);
     static void strtolower(char *str);
     static void *cmalloc(size_t size);
+    static std::vector<char> HexToBytes(const std::string& hex);
 };
 
 
