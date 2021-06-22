@@ -104,6 +104,8 @@ int main() {
 
     mHandler->RegisterMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
     mHandler->RegisterMessageHandler(RT_MSG_SERVER_CONNECT_ACCEPT_TCP::Request, RT_MSG_SERVER_CONNECT_ACCEPT_TCP::process);
+    mHandler->RegisterMessageHandler(RT_MSG_SERVER_CONNECT_COMPLETE::Request, RT_MSG_SERVER_CONNECT_COMPLETE::process);
+    mHandler->RegisterMessageHandler(RT_MSG_SERVER_ECHO::Request, RT_MSG_SERVER_ECHO::process);
 
     ring->SetMediusHandler(mHandler);
     ring->ServerLoop();
