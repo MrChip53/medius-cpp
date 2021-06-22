@@ -159,9 +159,9 @@ void IOuring::ServerLoop() {
                 auto *outReq = static_cast<request *>(Util::cmalloc(sizeof(request) + sizeof(struct iovec) * iovs.size()));
                 outReq->iovec_count = iovs.size();
                 outReq->client_socket = client_socket;
-                for (auto & iov : iovs) {
-                    outReq->iov[0].iov_base = iov.iov_base;
-                    outReq->iov[0].iov_len = iov.iov_len;
+                for (int i = 0; i < iovs.size(); i++) {
+                    outReq->iov[i].iov_base = iovs[i].iov_base;
+                    outReq->iov[i].iov_len = iovs[i].iov_len;
                 }
                 PostWriteRequest(outReq);
 

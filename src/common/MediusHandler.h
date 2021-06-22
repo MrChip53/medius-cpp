@@ -26,7 +26,7 @@ public:
 
 private:
     std::vector<MediusHandler::MediusMessage> rt_messages;
-    std::array<struct iovec(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&), 55> msgCallbacks;
+    std::array<std::vector<struct iovec(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)>, 55> msgCallbacks;
 };
 
 
