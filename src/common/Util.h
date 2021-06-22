@@ -14,7 +14,7 @@ public:
     static void fatal_error(const char *syscall);
     static void strtolower(char *str);
     static void *cmalloc(size_t size);
-    static std::vector<char> HexToBytes(const std::string& hex);
+    static std::tuple<int, char*> HexToBytes(const std::string& hex);
 };
 
 

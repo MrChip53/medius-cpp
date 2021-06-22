@@ -5,6 +5,7 @@
 #include <cctype>
 #include <cstdio>
 #include <cstdlib>
+#include <tuple>
 #include "Util.h"
 
 void Util::fatal_error(const char *syscall) {
@@ -26,14 +27,18 @@ void *Util::cmalloc(size_t size) {
     return buf;
 }
 
-std::vector<char> Util::HexToBytes(const std::string& hex) {
-    std::vector<char> bytes;
+std::tuple<int, char*> Util::HexToBytes(const std::string& hex) {
+    int byteLength = hex.length() / 2;
 
-    for (unsigned int i = 0; i < hex.length(); i += 2) {
+    char *bytes = new char[byteLength];
+
+
+    for (int i = 0; i < hex.length(); i += 2) {
+        int byteIdx = i == 0 ? i : i / 2;
         std::string byteString = hex.substr(i, 2);
         char byte = (char) strtol(byteString.c_str(), NULL, 16);
-        bytes.push_back(byte);
+        bytes[byteIdx] = byte;
     }
 
-    return bytes;
+    return std::make_tuple(byteLength, bytes);
 }
