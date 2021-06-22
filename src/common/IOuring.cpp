@@ -173,8 +173,7 @@ void IOuring::ServerLoop() {
             break;
             case EVENT_TYPE_WRITE: {
                 for (int i = 0; i < req->iovec_count; i++) {
-                    //TODO change this back to a malloc/free. IDK what this warning actually means
-                    delete[] req->iov[i].iov_base;
+                    free(req->iov[i].iov_base);
                 }
                 free(req);
             }
