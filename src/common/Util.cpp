@@ -30,6 +30,7 @@ void *Util::cmalloc(size_t size) {
 std::tuple<int, char*> Util::HexToBytes(const std::string& hex) {
     int byteLength = hex.length() / 2;
 
+    //TODO encapsulate this in a shared pointer so it will self free?
     char *bytes = new char[byteLength];
 
 

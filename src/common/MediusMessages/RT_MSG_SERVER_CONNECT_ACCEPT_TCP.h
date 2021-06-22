@@ -31,8 +31,10 @@ public:
         packet->CurClients = 0x01;
         strcpy(packet->IP, uData->IP().c_str());
 
+        //TODO make this a Util:: function
         iov.iov_len = sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP) + 3;
         char *buffer = new char[sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP) + 3];
+        memset(buffer, 0, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP) + 3);
         buffer[0] = Response;
         buffer[1] = (uint16_t)sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP);
         memcpy(&buffer[3], packet, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP));
