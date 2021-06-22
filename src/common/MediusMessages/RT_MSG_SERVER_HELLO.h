@@ -22,15 +22,7 @@ public:
         packet->encrypt = 0;
         packet->serverVersion = 0x6e;
 
-        iov.iov_len = sizeof(Packets::RT_MSG_SERVER_HELLO) + 3;
-        char *buffer = new char[sizeof(Packets::RT_MSG_SERVER_HELLO) + 3];
-        buffer[0] = Response;
-        buffer[1] = (uint16_t)sizeof(Packets::RT_MSG_SERVER_HELLO);
-        memcpy(&buffer[3], packet, sizeof(Packets::RT_MSG_SERVER_HELLO));
-        free(packet);
-
-        iov.iov_base = buffer;
-        return iov;
+        return Util::CreateIovec(packet, Response, sizeof(Packets::RT_MSG_SERVER_HELLO));
     }
 };
 

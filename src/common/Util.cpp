@@ -33,7 +33,7 @@ std::tuple<int, char*> Util::HexToBytes(const std::string& hex) {
     int byteLength = hex.length() / 2;
 
     //TODO encapsulate this in a shared pointer so it will self free?
-    char *bytes = new char[byteLength];
+    char *bytes = static_cast<char *>(malloc(sizeof(char) * byteLength));
 
 
     for (int i = 0; i < hex.length(); i += 2) {

@@ -19,15 +19,7 @@ public:
         auto len = std::get<0>(packet_data);
         auto packet = std::get<1>(packet_data);
 
-        iov.iov_len = len + 3;
-        char *buffer = new char[len + 3];
-        memset(buffer, 0, len + 3);
-        buffer[0] = Response;
-        buffer[1] = (uint16_t)len;
-        memcpy(&buffer[3], packet, len);
-        delete[] packet;
-        iov.iov_base = buffer;
-        return iov;
+        return Util::CreateIovec(packet, Response, len);
     }
 };
 
