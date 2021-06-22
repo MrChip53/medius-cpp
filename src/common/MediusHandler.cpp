@@ -27,11 +27,11 @@ void MediusHandler::ParseMessages(char *message) {
     } while (pos < sizeof(message) - 1);
 }
 
-void MediusHandler::RegisterMessageHandler(int msgRequest, struct iovec (*msg_func)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)) {
+void MediusHandler::RegisterRTMessageHandler(int msgRequest, struct iovec (*msg_func)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)) {
     msgCallbacks[msgRequest].push_back(msg_func);
 }
 
-std::vector<struct iovec> MediusHandler::ProcessMessages(const std::shared_ptr<UserData>& uData) {
+std::vector<struct iovec> MediusHandler::ProcessRTMessages(const std::shared_ptr<UserData>& uData) {
     std::vector<struct iovec> iovs;
     for (auto & rt_message : rt_messages) {
         if (msgCallbacks[rt_message.command].empty()) {

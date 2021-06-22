@@ -154,7 +154,7 @@ void IOuring::ServerLoop() {
                 memcpy(buffer, req->iov[0].iov_base, req->iov[0].iov_len);
 
                 mediusHandler->ParseMessages(buffer);
-                iovs = mediusHandler->ProcessMessages(userDatas[client_socket]);
+                iovs = mediusHandler->ProcessRTMessages(userDatas[client_socket]);
 
                 if (!iovs.empty()) {
                     auto *outReq = static_cast<request *>(Util::cmalloc(

@@ -20,9 +20,9 @@ public:
     } MediusMessage;
 
     void ParseMessages(char * message);
-    std::vector<struct iovec> ProcessMessages(const std::shared_ptr<UserData>& uData);
+    std::vector<struct iovec> ProcessRTMessages(const std::shared_ptr<UserData>& uData);
 
-    void RegisterMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
+    void RegisterRTMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
 
 private:
     std::vector<MediusHandler::MediusMessage> rt_messages;
