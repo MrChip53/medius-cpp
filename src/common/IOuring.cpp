@@ -156,14 +156,17 @@ void IOuring::ServerLoop() {
                 mediusHandler->ParseMessages(buffer);
                 iovs = mediusHandler->ProcessMessages(userDatas[client_socket]);
 
-                auto *outReq = static_cast<request *>(Util::cmalloc(sizeof(request) + sizeof(struct iovec) * iovs.size()));
-                outReq->iovec_count = iovs.size();
-                outReq->client_socket = client_socket;
-                for (int i = 0; i < iovs.size(); i++) {
-                    outReq->iov[i].iov_base = iovs[i].iov_base;
-                    outReq->iov[i].iov_len = iovs[i].iov_len;
+                if (!iovs.empty()) {
+                    auto *outReq = static_cast<request *>(Util::cmalloc(
+                            sizeof(request) + sizeof(struct iovec) * iovs.size()));
+                    outReq->iovec_count = iovs.size();
+                    outReq->client_socket = client_socket;
+                    for (int i = 0; i < iovs.size(); i++) {
+                        outReq->iov[i].iov_base = iovs[i].iov_base;
+                        outReq->iov[i].iov_len = iovs[i].iov_len;
+                    }
+                    PostWriteRequest(outReq);
                 }
-                PostWriteRequest(outReq);
 
                 free(req->iov[0].iov_base);
                 free(req);
