@@ -41,11 +41,14 @@ add_executable(medius_muis_server ${MUISDIR}/main.cpp
                                   ${CMNDIR}/Util.h
                                   ${CMNDIR}/MediusHandler.cpp
                                   ${CMNDIR}/MediusHandler.h
-                                  ${CMNDIR}/MediusMessages/RT_MSG_SERVER_HELLO.h
+                                  ${CMNDIR}/RTMessages/RT_MSG_SERVER_HELLO.h
                                   ${CMNDIR}/Packets.h
-                                  ${CMNDIR}/MediusMessages/RT_MSG_SERVER_CONNECT_ACCEPT_TCP.h
+                                  ${CMNDIR}/RTMessages/RT_MSG_SERVER_CONNECT_ACCEPT_TCP.h
                                   ${CMNDIR}/UserData.cpp
-                                  ${CMNDIR}/UserData.h ${CMNDIR}/MediusMessages/Messages.h ${CMNDIR}/MediusMessages/RT_MSG_SERVER_CONNECT_COMPLETE.h ${CMNDIR}/MediusMessages/RT_MSG_SERVER_ECHO.h)
+                                  ${CMNDIR}/UserData.h
+                                  ${CMNDIR}/Messages.h
+                                  ${CMNDIR}/RTMessages/RT_MSG_SERVER_CONNECT_COMPLETE.h
+                                  ${CMNDIR}/RTMessages/RT_MSG_SERVER_ECHO.h ${CMNDIR}/MediusMessages/MediusUniverseVariableInformationResponse.h ${CMNDIR}/RTMessages/RT_MSG_CLIENT_DISCONNECT_WITH_REASON.h)
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 

@@ -15,7 +15,7 @@ public:
     static void strtolower(char *str);
     static void *cmalloc(size_t size);
     static std::tuple<int, char*> HexToBytes(const std::string& hex);
-    static struct iovec CreateIovec(void *packet, uint8_t response, uint16_t dataLength);
+    static std::vector<struct iovec> CreateIovec(void *packet, uint8_t response, uint16_t dataLength);
 };
 
 

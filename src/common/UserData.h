@@ -14,6 +14,7 @@ class UserData {
     int32_t _AppId;
     std::string _Username;
     std::string _IP;
+    bool _Closed;
 
 
 public:
@@ -27,6 +28,8 @@ public:
     auto Username() const -> const std::string& { return _Username; }
     auto IP()       -> std::string&       { return _IP; }
     auto IP() const -> const std::string& { return _IP; }
+    auto Closed()       -> bool&       { return _Closed; }
+    auto Closed() const -> const bool& { return _Closed; }
 
 
 };

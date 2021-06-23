@@ -20,13 +20,17 @@ public:
     } MediusMessage;
 
     void ParseMessages(char * message);
-    std::vector<struct iovec> ProcessRTMessages(const std::shared_ptr<UserData>& uData);
 
-    void RegisterRTMessageHandler(int msgRequest, struct iovec(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
+    std::vector<struct iovec> ProcessRTMessages(const std::shared_ptr<UserData>& uData);
+    std::vector<struct iovec> ProcessMediusMessage(MediusHandler::MediusMessage message, const std::shared_ptr<UserData>& uData);
+
+    void RegisterRTMessageHandler(int msgRequest, std::vector<struct iovec>(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
+    void RegisterMediusMessageHandler(int msgClass, int msgId, std::vector<struct iovec>(*msg_func)(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData));
 
 private:
     std::vector<MediusHandler::MediusMessage> rt_messages;
-    std::array<std::vector<struct iovec(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)>, 55> msgCallbacks;
+    std::array<std::vector<std::vector<struct iovec>(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)>, 55> RTMessageCallbacks;
+    std::array<std::array<std::vector<std::vector<struct iovec>(*)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)>, 300>, 6> MediusMessageCallbacks;
 };
 
 

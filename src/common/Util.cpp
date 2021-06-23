@@ -46,7 +46,9 @@ std::tuple<int, char*> Util::HexToBytes(const std::string& hex) {
     return std::make_tuple(byteLength, bytes);
 }
 
-struct iovec Util::CreateIovec(void* packet, uint8_t response, uint16_t dataLength) {
+std::vector<struct iovec> Util::CreateIovec(void* packet, uint8_t response, uint16_t dataLength) {
+    std::vector<struct iovec> iovs;
+
     struct iovec iov;
 
     iov.iov_len = dataLength + 3;
@@ -59,5 +61,7 @@ struct iovec Util::CreateIovec(void* packet, uint8_t response, uint16_t dataLeng
 
     iov.iov_base = buffer;
 
-    return iov;
+    iovs.push_back(iov);
+
+    return iovs;
 }

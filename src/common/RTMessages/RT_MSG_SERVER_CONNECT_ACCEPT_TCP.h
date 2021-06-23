@@ -12,7 +12,7 @@ public:
     const static uint8_t Request = 0x00;
     const static uint8_t Response = 0x07;
 
-    static struct iovec process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
         if (data.length > sizeof(Packets::RT_MSG_CLIENT_CONNECT_TCP)) {
             //Extended packet
             uData->AppId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->AppId;

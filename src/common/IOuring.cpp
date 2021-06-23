@@ -170,8 +170,11 @@ void IOuring::ServerLoop() {
 
                 free(req->iov[0].iov_base);
                 free(req);
-
-                PostReadRequest(client_socket);
+                if (!userDatas[client_socket]->Closed())
+                    PostReadRequest(client_socket);
+                else {
+                    //TODO free everything related to this user
+                }
             }
             break;
             case EVENT_TYPE_WRITE: {
