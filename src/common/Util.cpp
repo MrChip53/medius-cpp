@@ -8,6 +8,8 @@
 #include <tuple>
 #include <cstring>
 #include <bits/types/struct_iovec.h>
+#include <ios>
+#include <iomanip>
 #include "Util.h"
 
 void Util::fatal_error(const char *syscall) {
@@ -64,4 +66,23 @@ std::vector<struct iovec> Util::CreateIovec(void* packet, uint8_t response, uint
     iovs.push_back(iov);
 
     return iovs;
+}
+
+struct iovec Util::CreateStaticIovec(void *packet, int dataLength) {
+    struct iovec iov;
+
+    iov.iov_len = dataLength;
+    iov.iov_base = packet;
+
+    return iov;
+}
+
+std::string Util::ToHex(const std::string& str) {
+        std::ostringstream ret;
+        for (char i : str)
+            ret << std::hex
+                << std::setfill('0')
+                << std::setw(8)
+                << (int)i;
+        return ret.str();
 }
