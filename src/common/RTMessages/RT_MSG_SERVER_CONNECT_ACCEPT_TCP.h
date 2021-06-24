@@ -27,7 +27,7 @@ public:
         Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP *packet = static_cast<Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP *>(malloc(sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP)));
         memset(packet, 0, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP));
         packet->CurClients = 0x01;
-        strcpy(packet->IP, uData->IP().c_str());
+        strcpy(packet->ClientIP, uData->IP().c_str());
 
         return Util::CreateIovec(packet, Response, sizeof(Packets::RT_MSG_SERVER_CONNECT_ACCEPT_TCP));
     }

@@ -24,6 +24,9 @@ public:
     static std::string Int32ToHex(int number);
 
     static std::string ReverseHexString(const std::string& s);
+
+    static std::vector<struct iovec>
+    CreateMediusIovec(void *packet, uint16_t dataLength, uint8_t mediusClass, uint8_t mediusId);
 };
 
 

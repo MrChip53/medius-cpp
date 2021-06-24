@@ -5,6 +5,7 @@
 #include <cstring>
 #include <bits/types/struct_iovec.h>
 #include <iostream>
+#include <iomanip>
 #include "MediusHandler.h"
 
 void MediusHandler::ParseMessages(char *message) {
@@ -40,9 +41,11 @@ std::vector<struct iovec> MediusHandler::ProcessRTMessages(const std::shared_ptr
 
     for (auto & rt_message : rt_messages) {
         if (RTMessageCallbacks[rt_message.command].empty() && rt_message.command != 0x0b) {
-            std::cout << "Unhandled message: ";
-            printf("0x%02x", rt_message.command);
-            std::cout << std::endl;
+            std::cerr << "Unhandled message: 0x"
+                      << std::hex
+                      << std::setfill('0')
+                      << std::setw(2)
+                      << rt_message.command << std::endl;
             continue;
         } else {
             std::cout << "Handled message: ";
@@ -75,9 +78,17 @@ std::vector<struct iovec> MediusHandler::ProcessMediusMessage(MediusHandler::Med
     uint8_t id = message.mediusMessage[1];
 
     if (MediusMessageCallbacks[type][id].empty()) {
-        std::cout << "Unhandled message: ";
-        printf("Type: 0x%02x, ID: 0x%02x", type, id);
-        std::cout << std::endl;
+        std::cerr << "Unhandled message: Type: 0x"
+                  << std::hex
+                  << std::setfill('0')
+                  << std::setw(2)
+                  << (int)type
+                  << " ID: 0x"
+                  << std::hex
+                  << std::setfill('0')
+                  << std::setw(2)
+                  << (int)id
+                  << std::endl;
         return std::vector<struct iovec>();
     } else {
         std::cout << "Handled message: ";

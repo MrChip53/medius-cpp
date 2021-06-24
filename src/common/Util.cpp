@@ -68,6 +68,28 @@ std::vector<struct iovec> Util::CreateIovec(void* packet, uint8_t response, uint
     return iovs;
 }
 
+std::vector<struct iovec> Util::CreateMediusIovec(void* packet, uint16_t dataLength, uint8_t mediusClass, uint8_t mediusId) {
+    std::vector<struct iovec> iovs;
+
+    struct iovec iov;
+
+    iov.iov_len = dataLength + 5;
+    char *buffer = static_cast<char *>(malloc(sizeof(char) * (dataLength + 5)));
+    memset(buffer, 0, dataLength + 5);
+    buffer[0] = 0x0a;
+    buffer[1] = (uint16_t)dataLength + 2;
+    buffer[3] = mediusClass;
+    buffer[4] = mediusId;
+    memcpy(&buffer[5], packet, dataLength);
+    free(packet);
+
+    iov.iov_base = buffer;
+
+    iovs.push_back(iov);
+
+    return iovs;
+}
+
 struct iovec Util::CreateStaticIovec(void *packet, int dataLength) {
     struct iovec iov;
 
