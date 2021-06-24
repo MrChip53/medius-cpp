@@ -40,7 +40,7 @@ public:
                << Util::ReverseHexString(Util::Int32ToHex(1)) // Status
                << Util::ReverseHexString(Util::Int32ToHex(17)) // Online
                << Util::ReverseHexString(Util::Int32ToHex(69420)) // Max
-               << Util::ToHexFixedLength("v1.00 http://192.168.1.92:8080/patch", 128)
+               << Util::ToHexFixedLength("v1.00 http://socomftb2.psp.online.scea.com:10061/SOCOMFTB2_SVML/download/EBOOT.PBP", 128)
                << "01000000";
         auto universe_packet = Util::HexToBytes(uniStr.str());
         len = std::get<0>(universe_packet);
