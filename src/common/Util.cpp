@@ -86,3 +86,47 @@ std::string Util::ToHex(const std::string& str) {
                 << (int)i;
         return ret.str();
 }
+
+std::string Util::ToHexFixedLength(const std::string& str, int length) {
+    std::ostringstream ret;
+    if (str.length() < length) {
+        for (char i : str)
+            ret << std::hex
+                << std::setfill('0')
+                << std::setw(2)
+                << (int) i;
+
+        for (int i = 0; i < length - str.length(); i++) {
+            ret << "00";
+        }
+    } else {
+        for (int i = 0; i < length; i++)
+            ret << std::hex
+                << std::setfill('0')
+                << std::setw(2)
+                << (int)str[i];
+    }
+    return ret.str();
+}
+
+std::string Util::Int32ToHex(const int number) {
+    std::ostringstream intstr;
+    intstr << std::hex << std::setfill('0') << std::setw(8) << number;
+
+    return intstr.str();
+}
+
+std::string Util::ReverseHexString(const std::string& s1)
+{
+    if (s1.size() & 1) return std::string(); // reject odd-length strings
+
+    std::string s = s1;
+
+    std::reverse(begin(s), end(s));
+
+    for (int i = 0; i + 1 < s.size(); i += 2) {
+        std::swap(s[i], s[i + 1]);
+    }
+
+    return s;
+}

@@ -18,6 +18,12 @@ public:
     static std::vector<struct iovec> CreateIovec(void *packet, uint8_t response, uint16_t dataLength);
     static struct iovec CreateStaticIovec(void *packet, int dataLength);
     static std::string ToHex(const std::string& str);
+
+    static std::string ToHexFixedLength(const std::string &str, int length);
+
+    static std::string Int32ToHex(int number);
+
+    static std::string ReverseHexString(const std::string& s);
 };
 
 
