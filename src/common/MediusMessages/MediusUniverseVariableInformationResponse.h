@@ -20,7 +20,7 @@ public:
         std::vector<struct iovec> iovs;
 
         //TODO make this packet fully dynamic in its own class
-        std::string svoUrl = "http://192.168.1.93:8080/";
+        std::string svoUrl = "http://socomftb2.psp.online.scea.com:10061/SOCOMFTB2_SVML/index.jsp?languageid=1";
 
         std::ostringstream svoStr;
         svoStr << "041e000000000000000000000000000000000000000000" << std::hex << (int)svoUrl.size() << Util::ToHex(svoUrl);
@@ -40,7 +40,7 @@ public:
                << Util::ReverseHexString(Util::Int32ToHex(1)) // Status
                << Util::ReverseHexString(Util::Int32ToHex(17)) // Online
                << Util::ReverseHexString(Util::Int32ToHex(69420)) // Max
-               << Util::ToHexFixedLength("v1.0 http://192.168.1.92:8080/patch", 128)
+               << Util::ToHexFixedLength("v1.00 http://192.168.1.92:8080/patch", 128)
                << "01000000";
         auto universe_packet = Util::HexToBytes(uniStr.str());
         len = std::get<0>(universe_packet);

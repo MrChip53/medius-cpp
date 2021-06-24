@@ -74,6 +74,17 @@ std::vector<struct iovec> MediusHandler::ProcessMediusMessage(MediusHandler::Med
     uint8_t type = message.mediusMessage[0];
     uint8_t id = message.mediusMessage[1];
 
+    if (MediusMessageCallbacks[type][id].empty()) {
+        std::cout << "Unhandled message: ";
+        printf("Type: 0x%02x, ID: 0x%02x", type, id);
+        std::cout << std::endl;
+        return std::vector<struct iovec>();
+    } else {
+        std::cout << "Handled message: ";
+        printf("Type: 0x%02x, ID: 0x%02x", type, id);
+        std::cout << std::endl;
+    }
+
     for (auto & msgCallback : MediusMessageCallbacks[type][id]) {
         if (msgCallback != nullptr) {
             std::vector<struct iovec> rt_iovs = msgCallback(message, uData);

@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.19)
 
-include(ExternalProject)
-
-project(medius_muis_server)
+project(medius_mls_server)
 
 set(CMAKE_CXX_STANDARD 20)
 
-set(MUISDIR ${CMAKE_CURRENT_LIST_DIR}/muis)
+set(MLSDIR ${CMAKE_CURRENT_LIST_DIR}/mls)
 set(CMNDIR ${CMAKE_CURRENT_LIST_DIR}/common)
 
-add_executable(medius_muis_server ${MUISDIR}/main.cpp
+add_executable(medius_mls_server ${MLSDIR}/main.cpp
                                   ${CMNDIR}/RTPacket.h
                                   ${CMNDIR}/database/DatabaseRepository.cpp
                                   ${CMNDIR}/database/DatabaseRepository.h
@@ -32,4 +30,4 @@ add_executable(medius_muis_server ${MUISDIR}/main.cpp
 
 include_directories(${install_dir}/src/project_liburing/src/include)
 
-target_link_libraries(medius_muis_server liburing)
+target_link_libraries(medius_mls_server liburing)
