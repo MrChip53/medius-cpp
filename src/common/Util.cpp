@@ -41,7 +41,7 @@ std::tuple<int, char*> Util::HexToBytes(const std::string& hex) {
     for (int i = 0; i < hex.length(); i += 2) {
         int byteIdx = i == 0 ? i : i / 2;
         std::string byteString = hex.substr(i, 2);
-        char byte = (char) strtol(byteString.c_str(), NULL, 16);
+        char byte = (char) strtol(byteString.c_str(), nullptr, 16);
         bytes[byteIdx] = byte;
     }
 
@@ -82,7 +82,7 @@ std::string Util::ToHex(const std::string& str) {
         for (char i : str)
             ret << std::hex
                 << std::setfill('0')
-                << std::setw(8)
+                << std::setw(2)
                 << (int)i;
         return ret.str();
 }
