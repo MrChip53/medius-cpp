@@ -18,6 +18,10 @@ class UserData {
 
 
 public:
+    explicit UserData() {
+        _Closed = false;
+    }
+
     auto SocketFd()       -> int32_t&       { return _SocketFd; }
     auto SocketFd() const -> const int32_t& { return _SocketFd; }
     auto WorldId()       -> uint32_t&       { return _WorldId; }

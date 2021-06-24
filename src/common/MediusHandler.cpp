@@ -44,6 +44,10 @@ std::vector<struct iovec> MediusHandler::ProcessRTMessages(const std::shared_ptr
             printf("0x%02x", rt_message.command);
             std::cout << std::endl;
             continue;
+        } else {
+            std::cout << "Handled message: ";
+            printf("0x%02x", rt_message.command);
+            std::cout << std::endl;
         }
 
         if (rt_message.command == 0x0b) {

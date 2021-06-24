@@ -17,7 +17,7 @@ private:
     MediusHandler *mediusHandler;
     std::unordered_map<int, std::shared_ptr<UserData>> userDatas;
 
-    int SetupListeningSocket(int port);
+    static int SetupListeningSocket(int port);
 
 public:
     struct request {

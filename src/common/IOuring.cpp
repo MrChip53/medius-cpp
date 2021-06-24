@@ -173,7 +173,7 @@ void IOuring::ServerLoop() {
                 if (!userDatas[client_socket]->Closed())
                     PostReadRequest(client_socket);
                 else {
-                    //TODO free everything related to this user
+                    userDatas[client_socket] = nullptr;
                 }
             }
             break;
@@ -185,7 +185,7 @@ void IOuring::ServerLoop() {
             }
             break;
         }
-        /* Mark this request as processed */
+
         io_uring_cqe_seen(&ring, cqe);
     }
 }
