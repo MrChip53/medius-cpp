@@ -14,6 +14,8 @@
 #define ACCOUNTNAME_MAXLEN 32
 #define PASSWORD_MAXLEN 32
 #define ACCOUNTSTATS_MAXLEN 256
+#define WORLDNAME_MAXLEN 64
+#define LOBBYNAME_MAXLEN WORLDNAME_MAXLEN
 
 class Packets {
 public:
@@ -266,6 +268,29 @@ public:
         ExtraMediusPlayerStatus = 0xffffff
     } MediusPlayerStatus;
 
+    typedef enum {
+        MediusWorldGenericFieldLevel0 = 0,
+        MediusWorldGenericFieldLevel1 = (1<<0),
+        MediusWorldGenericFieldLevel2 = (1<<1),
+        MediusWorldGenericFieldLevel3 = (1<<2),
+        MediusWorldGenericFieldLevel4 = (1<<3),
+        MediusWorldGenericFieldLevel12 = (1<<4),
+        MediusWorldGenericFieldLevel123 = (1<<5),
+        MediusWorldGenericFieldLevel1234 = (1<<6),
+        MediusWorldGenericFieldLevel23 = (1<<7),
+        MediusWorldGenericFieldLevel234 = (1<<8),
+        MediusWorldGenericFieldLevel34 = (1<<9),
+        ExtraMediusWorldGenericFieldLevelType = 0xffffff
+    } MediusWorldGenericFieldLevelType;
+
+    typedef enum {
+        WORLD_SECURITY_NONE = 0,
+        WORLD_SECURITY_PLAYER_PASSWORD = (1 << 0),
+        WORLD_SECURITY_CLOSED = (1 << 1),
+        WORLD_SECURITY_SPECTATOR_PASSWORD = (1 << 2),
+        WORLD_SECURITY_EXTRA = 0xFFFFFF
+    } MediusWorldSecurityLevelType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -394,14 +419,36 @@ public:
 
     typedef struct {
         MessageID MsgID;
-        char blank[3];
         MediusCallbackStatus StatusCode;
         char AccountName[ACCOUNTNAME_MAXLEN];
         int ApplicationID;
         MediusPlayerStatus PlayerStatus;
         MediusConnectionType ConnectionType;
         AccountStats Stats;
-    } __attribute__((packed)) MediusPlayerInfoResponse;
+    } MediusPlayerInfoResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        unsigned short PageID;
+        unsigned short PageSize;
+    } MediusChannelList_ExtraInfoRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int MediusWorldID;
+        unsigned short PlayerCount;
+        unsigned short MaxPlayers;
+        unsigned short GameWorldCount;
+        MediusWorldSecurityLevelType SecurityLevel;
+        unsigned int GenericField1;
+        unsigned int GenericField2;
+        unsigned int GenericField3;
+        unsigned int GenericField4;
+        MediusWorldGenericFieldLevelType GenericFieldLevel;
+        char LobbyName[LOBBYNAME_MAXLEN];
+        char EndOfList;
+    } MediusChannelList_ExtraInfoResponse;
 };
 
 
