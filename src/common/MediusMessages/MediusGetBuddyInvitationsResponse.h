@@ -10,7 +10,7 @@
 
 class MediusGetBuddyInvitationsResponse {
 public:
-    const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobby;
+    const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobbyExt;
     const static PacketInfo::LobbyExt::Packet RespId = PacketInfo::LobbyExt::GetBuddyInvitationsResponse;
 
     static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
