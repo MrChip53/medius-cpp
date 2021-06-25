@@ -474,6 +474,23 @@ public:
         SessionKey SKey;
         AccountStats Stats;
     } MediusAccountUpdateStatsRequest;
+
+    typedef struct {
+        MediusPlayerStatus ConnectStatus;
+        int MediusLobbyWorldID;
+        int MediusGameWorldID;
+        char LobbyName[WORLDNAME_MAXLEN];
+        char GameName[WORLDNAME_MAXLEN];
+    } MediusPlayerOnlineState;
+
+    typedef struct {
+        char MessageID[MESSAGEID_MAXLEN];
+        MediusCallbackStatus StatusCode;
+        int AccountID;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+        MediusPlayerOnlineState OnlineState;
+        char EndOfList;
+    } MediusGetBuddyList_ExtraInfoResponse;
 };
 
 
