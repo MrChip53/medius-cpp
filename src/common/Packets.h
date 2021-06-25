@@ -16,6 +16,8 @@
 #define ACCOUNTSTATS_MAXLEN 256
 #define WORLDNAME_MAXLEN 64
 #define LOBBYNAME_MAXLEN WORLDNAME_MAXLEN
+#define CLANNAME_MAXLEN 32
+#define CLANSTATS_MAXLEN 256
 
 class Packets {
 public:
@@ -297,6 +299,12 @@ public:
         ExtraMediusAddType = 0xffffff
     } MediusBuddyAddType;
 
+    typedef enum {
+        ClanActive,
+        ClanDisbanded = -1,
+        ExtraMediusClanStatus = 0xffffff
+    } MediusClanStatus;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -491,6 +499,26 @@ public:
         MediusPlayerOnlineState OnlineState;
         char EndOfList;
     } MediusGetBuddyList_ExtraInfoResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int Start;
+        int PageSize;
+    } MediusGetMyClansRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int ClanID;
+        int ApplicationID;
+        char ClanName[CLANNAME_MAXLEN];
+        int LeaderAccountID;
+        char LeaderAccountName[ACCOUNTNAME_MAXLEN];
+        char Stats[CLANSTATS_MAXLEN];
+        MediusClanStatus Status;
+        char EndOfList;
+    } MediusGetMyClansResponse;
 };
 
 
