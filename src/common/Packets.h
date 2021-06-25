@@ -18,6 +18,7 @@
 #define LOBBYNAME_MAXLEN WORLDNAME_MAXLEN
 #define CLANNAME_MAXLEN 32
 #define CLANSTATS_MAXLEN 256
+#define LADDERSTATSWIDE_MAXLEN 100
 
 class Packets {
 public:
@@ -305,6 +306,12 @@ public:
         ExtraMediusClanStatus = 0xffffff
     } MediusClanStatus;
 
+    typedef enum {
+        MediusLadderTypePlayer = 0,
+        MediusLadderTypeClan = 1,
+        ExtraMediusLadderType = 0xffffff
+    } MediusLadderType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -519,6 +526,12 @@ public:
         MediusClanStatus Status;
         char EndOfList;
     } MediusGetMyClansResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusLadderType LadderType;
+        int Stats[LADDERSTATSWIDE_MAXLEN];
+    } MediusUpdateLadderStatsWideRequest;
 };
 
 
