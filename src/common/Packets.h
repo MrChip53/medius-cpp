@@ -601,6 +601,18 @@ public:
         unsigned int TotalRankings;
         char EndOfList;
     } MediusGetClanMemberList_ExtraInfoResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+    } MediusAccountGetIDRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        int AccountID;
+        MediusCallbackStatus StatusCode;
+    } MediusAccountGetIDResponse;
 };
 
 

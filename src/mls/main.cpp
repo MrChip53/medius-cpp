@@ -41,6 +41,7 @@ int main() {
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::GetIgnoreList, MediusGetIgnoreListResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::CheckMyClanInvitations, MediusCheckMyClanInvitationsResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::GetClanMemberList_ExtraInfo, MediusGetClanMemberList_ExtraInfoResponse::process);
+    mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::AccountGetID, MediusAccountGetIDResponse::process);
 
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_CONNECT_ACCEPT_TCP::Request, RT_MSG_SERVER_CONNECT_ACCEPT_TCP::process);

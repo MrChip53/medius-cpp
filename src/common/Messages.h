@@ -30,5 +30,6 @@
 #include "MediusMessages/MediusGetIgnoreListResponse.h"
 #include "MediusMessages/MediusCheckMyClanInvitationsResponse.h"
 #include "MediusMessages/MediusGetClanMemberList_ExtraInfoResponse.h"
+#include "MediusMessages/MediusAccountGetIDResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
