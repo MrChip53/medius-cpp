@@ -24,5 +24,6 @@
 #include "MediusMessages/MediusPlayerInfoResponse.h"
 #include "MediusMessages/MediusChannelList_ExtraInfoResponse.h"
 #include "MediusMessages/MediusGetBuddyInvitationsResponse.h"
+#include "MediusMessages/MediusAccountStatsRequest.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H

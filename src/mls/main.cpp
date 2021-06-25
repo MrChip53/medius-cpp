@@ -37,6 +37,7 @@ int main() {
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::AccountLogin, MediusAccountLoginResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::UpdateUserState, MediusUpdateUserState::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::PlayerInfo, MediusPlayerInfoResponse::process);
+    mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::AccountUpdateStats, MediusAccountStatsRequest::process);
 
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_CONNECT_ACCEPT_TCP::Request, RT_MSG_SERVER_CONNECT_ACCEPT_TCP::process);

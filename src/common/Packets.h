@@ -468,6 +468,12 @@ public:
         MediusBuddyAddType addType;
         char EndOfList;
     } MediusGetBuddyInvitationsResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        AccountStats Stats;
+    } MediusAccountUpdateStatsRequest;
 };
 
 

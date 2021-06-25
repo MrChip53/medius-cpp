@@ -21,6 +21,8 @@ class UserData {
 
 
 public:
+    Packets::AccountStats Stats;
+
     explicit UserData() {
         Closed_ = false;
     }
