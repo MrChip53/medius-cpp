@@ -19,6 +19,8 @@
 #define CLANNAME_MAXLEN 32
 #define CLANSTATS_MAXLEN 256
 #define LADDERSTATSWIDE_MAXLEN 100
+#define CLANINVITERESPONSEMSG_MAXLEN 200
+#define CLANMSG_MAXLEN 200
 
 class Packets {
 public:
@@ -312,6 +314,14 @@ public:
         ExtraMediusLadderType = 0xffffff
     } MediusLadderType;
 
+    typedef enum {
+        ClanInvitationUndecided,
+        ClanInvitationAccept,
+        ClanInvitationDecline,
+        ClanInvitationRevoked,
+        ExtraMediusClanInvitationsResponseStatus = 0xffffff
+    } MediusClanInvitationsResponseStatus;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -532,6 +542,39 @@ public:
         MediusLadderType LadderType;
         int Stats[LADDERSTATSWIDE_MAXLEN];
     } MediusUpdateLadderStatsWideRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+    } MediusGetIgnoreListRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int IgnoreAccountID;
+        char IgnoreAccountName[ACCOUNTNAME_MAXLEN];
+        MediusPlayerStatus PlayerStatus;
+        char EndOfList;
+    } MediusGetIgnoreListResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int Start;
+        int PageSize;
+    } MediusCheckMyClanInvitationsRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int ClanInvitationID;
+        int ClanID;
+        MediusClanInvitationsResponseStatus ResponseStatus;
+        char Message[CLANMSG_MAXLEN];
+        int LeaderAccountID;
+        char LeaderAccountName[ACCOUNTNAME_MAXLEN];
+        char EndOfList;
+    } MediusCheckMyClanInvitationsResponse;
 };
 
 

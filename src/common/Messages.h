@@ -27,5 +27,7 @@
 #include "MediusMessages/MediusAccountStatsRequest.h"
 #include "MediusMessages/MediusGetMyClansResponse.h"
 #include "MediusMessages/MediusUpdateLadderStatsWideRequest.h"
+#include "MediusMessages/MediusGetIgnoreListResponse.h"
+#include "MediusMessages/MediusCheckMyClanInvitationsResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
