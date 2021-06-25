@@ -18,6 +18,7 @@ public:
             uData->AppId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->AppId;
             uData->WorldId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->TargetWorldId;
             //TODO verify and store session and access keys
+            uData->Username() = "KiLLLaTHON";
         } else {
             //Normal packet
             uData->AppId() = ((Packets::RT_MSG_CLIENT_CONNECT_TCP_EXTENDED*)data.mediusMessage)->AppId;

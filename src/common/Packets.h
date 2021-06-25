@@ -13,6 +13,7 @@
 #define NET_MAX_IP_LENGTH 16
 #define ACCOUNTNAME_MAXLEN 32
 #define PASSWORD_MAXLEN 32
+#define ACCOUNTSTATS_MAXLEN 256
 
 class Packets {
 public:
@@ -255,9 +256,20 @@ public:
         ExtraMediusGameListFilterField = 0xffffff
     } MediusGameListFilterField;
 
+    typedef enum {
+        MediusPlayerDisconnected = 0,
+        MediusPlayerInAuthWorld,
+        MediusPlayerInChatWorld,
+        MediusPlayerInGameWorld,
+        MediusPlayerInOtherUniverse,
+        LastMediusPLayerStatus,
+        ExtraMediusPlayerStatus = 0xffffff
+    } MediusPlayerStatus;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
+    typedef char AccountStats[ACCOUNTSTATS_MAXLEN];
     typedef char IP[IP_MAXLEN];
     typedef uint8_t RSAKey[RSAKEY_SIZE];
 
@@ -373,6 +385,23 @@ public:
         MediusCallbackStatus StatusCode;
         unsigned int FilterID;
     } MediusSetGameListFilterResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int AccountID;
+    } MediusPlayerInfoRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        char blank[3];
+        MediusCallbackStatus StatusCode;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+        int ApplicationID;
+        MediusPlayerStatus PlayerStatus;
+        MediusConnectionType ConnectionType;
+        AccountStats Stats;
+    } __attribute__((packed)) MediusPlayerInfoResponse;
 };
 
 

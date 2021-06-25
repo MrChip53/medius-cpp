@@ -77,7 +77,8 @@ std::vector<struct iovec> Util::CreateMediusIovec(void* packet, uint16_t dataLen
     char *buffer = static_cast<char *>(malloc(sizeof(char) * (dataLength + 5)));
     memset(buffer, 0, dataLength + 5);
     buffer[0] = 0x0a;
-    buffer[1] = (uint16_t)dataLength + 2;
+    uint16_t mediusSize = dataLength + 2;
+    memcpy(&buffer[1], &mediusSize, sizeof(uint16_t));
     buffer[3] = mediusClass;
     buffer[4] = mediusId;
     memcpy(&buffer[5], packet, dataLength);

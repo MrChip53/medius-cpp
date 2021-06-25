@@ -21,5 +21,6 @@
 #include "MediusMessages/MediusGetServerTimeResponse.h"
 #include "MediusMessages/MediusUpdateUserState.h"
 #include "MediusMessages/MediusSetGameListFilterResponse.h"
+#include "MediusMessages/MediusPlayerInfoResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
