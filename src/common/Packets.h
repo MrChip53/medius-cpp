@@ -291,6 +291,12 @@ public:
         WORLD_SECURITY_EXTRA = 0xFFFFFF
     } MediusWorldSecurityLevelType;
 
+    typedef enum {
+        AddSingle = 0,
+        AddSymmetric = 1,
+        ExtraMediusAddType = 0xffffff
+    } MediusBuddyAddType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -449,6 +455,19 @@ public:
         char LobbyName[LOBBYNAME_MAXLEN];
         char EndOfList;
     } MediusChannelList_ExtraInfoResponse;
+
+    typedef struct {
+        MessageID MsgID;
+    } MediusGetBuddyInvitationsRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int AccountID;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+        MediusBuddyAddType addType;
+        char EndOfList;
+    } MediusGetBuddyInvitationsResponse;
 };
 
 
