@@ -143,6 +143,63 @@ public:
         ExtraNetAddressType = 0xFFFFFFFF
     } NetAddressType;
 
+    typedef enum {
+        MediusTimeZone_IDLW = -1200,
+        MediusTimeZone_HST = -1000,
+        MediusTimeZone_AKST = -900,
+        MediusTimeZone_AKDT = -800,
+        MediusTimeZone_PST = -801,
+        MediusTimeZone_PDT = -700,
+        MediusTimeZone_MST = -701,
+        MediusTimeZone_MDT = -600,
+        MediusTimeZone_CST = -601,
+        MediusTimeZone_CDT = -500,
+        MediusTimeZone_EST = -501,
+        MediusTimeZone_EDT = -400,
+        MediusTimeZone_AST = -401,
+        MediusTimeZone_NST = -350,
+        MediusTimeZone_ADT = -300,
+        MediusTimeZone_NDT = -250,
+        MediusTimeZone_WAT = -100,
+        MediusTimeZone_GMT = 0,
+        MediusTimeZone_UTC = 1,
+        MediusTimeZone_WET = 2,
+        MediusTimeZone_BST = 100,
+        MediusTimeZone_IRISHST = 101,
+        MediusTimeZone_WEST = 102,
+        MediusTimeZone_CET = 103,
+        MediusTimeZone_CEST = 200,
+        MediusTimeZone_SWEDISHST = 201,
+        MediusTimeZone_FST = 202,
+        MediusTimeZone_CAT = 203,
+        MediusTimeZone_SAST = 204,
+        MediusTimeZone_EET = 205,
+        MediusTimeZone_ISRAELST = 206,
+        MediusTimeZone_EEST = 300,
+        MediusTimeZone_BT = 301,
+        MediusTimeZone_MSK = 302,
+        MediusTimeZone_IRANST = 350,
+        MediusTimeZone_MSD = 400,
+        MediusTimeZone_INDIANST = 550,
+        MediusTimeZone_JT = 750,
+        MediusTimeZone_HKT = 800,
+        MediusTimeZone_CCT = 801,
+        MediusTimeZone_AWST = 802,
+        MediusTimeZone_MT = 850,
+        MediusTimeZone_KST = 900,
+        MediusTimeZone_JST = 901,
+        MediusTimeZone_ACST = 950,
+        MediusTimeZone_AEST = 1000,
+        MediusTimeZone_GST = 1001,
+        MediusTimeZone_ACDT = 1050,
+        MediusTimeZone_AEDT = 1100,
+        MediusTimeZone_SST = 1101,
+        MediusTimeZone_NZST = 1200,
+        MediusTimeZone_IDLE = 1201,
+        MediusTimeZone_NZDT = 1300,
+        MediusTimeZone_EXTRA = 0xffffff
+    } MediusTimeZone;
+
     typedef struct {
         NetAddressType AddressType;
         char Address[NET_MAX_IP_LENGTH];
@@ -250,6 +307,17 @@ public:
         int MediusWorldID;
         NetConnectionInfo ConnectInfo;
     } MediusAccountLoginResponse;
+
+    typedef struct {
+        MessageID MsgID;
+    } MediusGetServerTimeRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int GMT_time;
+        MediusTimeZone Local_server_timezone;
+    } MediusGetServerTimeResponse;
 };
 
 

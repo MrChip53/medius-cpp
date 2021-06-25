@@ -18,5 +18,6 @@
 #include "MediusMessages/MediusGetPolicyResponse.h"
 #include "MediusMessages/MediusAccountLoginResponse.h"
 #include "MediusMessages/MediusPacket42.h"
+#include "MediusMessages/MediusGetServerTimeResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
