@@ -26,9 +26,11 @@ int main() {
     signal(SIGINT, sigint_handler);
 
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::ExtendedSessionBeginRequest, MediusSessionBeginResponse::process);
+    mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::UnknownPacket_41, MediusPacket42::process);
 
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::SetLocalizationParams, MediusSetLocalizationParamsResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::Policy, MediusGetPolicyResponse::process);
+    mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::AccountLogin, MediusAccountLoginResponse::process);
 
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_HELLO::Request, RT_MSG_SERVER_HELLO::process);
     mHandler->RegisterRTMessageHandler(RT_MSG_SERVER_CONNECT_ACCEPT_TCP::Request, RT_MSG_SERVER_CONNECT_ACCEPT_TCP::process);

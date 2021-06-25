@@ -10,6 +10,9 @@
 #define IP_MAXLEN 17
 #define RSAKEY_SIZE 64
 #define MESSAGEID_MAXLEN 21
+#define NET_MAX_IP_LENGTH 16
+#define ACCOUNTNAME_MAXLEN 32
+#define PASSWORD_MAXLEN 32
 
 class Packets {
 public:
@@ -121,11 +124,58 @@ public:
         ExtraMediusLanguageType = 0xffffff
     } MediusLanguageType;
 
+    typedef enum {
+        MediusChildAccount,
+        MediusMasterAccount,
+        ExtraMediusAccountType = 0xffffff
+    } MediusAccountType;
+
+    typedef enum {
+        NetAddressNone = 0,
+        NetAddressTypeExternal = 1,
+        NetAddressTypeInternal = 2,
+        NetAddressTypeNATService = 3,
+        NetAddressTypeBinaryExternal = 4,
+        NetAddressTypeBinaryInternal = 5,
+        NetAddressTypeBinaryExternalVport = 6,
+        NetAddressTypeBinaryInternalVport = 7,
+        NetAddressTypeBinaryNATServices = 8,
+        ExtraNetAddressType = 0xFFFFFFFF
+    } NetAddressType;
+
+    typedef struct {
+        NetAddressType AddressType;
+        char Address[NET_MAX_IP_LENGTH];
+        uint16_t Port;
+    } NetAddress;
+
+    typedef struct {
+        NetAddress aAddressList[2];
+    } NetAddressList;
+
+    typedef enum {
+        NetConnectionNone = 0,
+        NetConnectionTypeClientServerTCP = 1,
+        NetConnectionTypePeerToPeerUDP = 2,
+        NetConnectionTypeClientServerTCPAuxUDP = 3,
+        NetConnectionTypeClientListenerTCP = 4,
+        ExtraNetConnectionType = 0xffffff
+    } NetConnectionType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
     typedef char IP[IP_MAXLEN];
     typedef uint8_t RSAKey[RSAKEY_SIZE];
+
+    typedef struct {
+        NetConnectionType Type;
+        NetAddressList AddressList;
+        int WorldID;
+        RSAKey ServerKey;
+        SessionKey SKey;
+        AccessKey AKey;
+    } NetConnectionInfo;
 
     typedef struct {
         uint8_t serverVersion;
@@ -184,6 +234,22 @@ public:
         MediusCharacterEncodingType CharacterEncoding;
         MediusLanguageType Language;
     } MediusSetLocalizationParamsRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+        char Password[PASSWORD_MAXLEN];
+    } MediusAccountLoginRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int AccountID;
+        MediusAccountType AccountType;
+        int MediusWorldID;
+        NetConnectionInfo ConnectInfo;
+    } MediusAccountLoginResponse;
 };
 
 

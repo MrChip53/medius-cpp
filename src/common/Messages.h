@@ -16,5 +16,7 @@
 #include "MediusMessages/MediusSessionBeginResponse.h"
 #include "MediusMessages/MediusSetLocalizationParamsResponse.h"
 #include "MediusMessages/MediusGetPolicyResponse.h"
+#include "MediusMessages/MediusAccountLoginResponse.h"
+#include "MediusMessages/MediusPacket42.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
