@@ -226,6 +226,35 @@ public:
         ExtraNetConnectionType = 0xffffff
     } NetConnectionType;
 
+    typedef enum {
+        LESS_THAN,
+        LESS_THAN_OR_EQUAL_TO,
+        EQUAL_TO,
+        GREATER_THAN_OR_EQUAL_TO,
+        GREATER_THAN,
+        NOT_EQUALS,
+        ExtraMediusComparisonOperator = 0xffffff
+    } MediusComparisonOperator;
+
+    typedef enum {
+        MEDIUS_FILTER_PLAYER_COUNT = 1,
+        MEDIUS_FILTER_MIN_PLAYERS = 2,
+        MEDIUS_FILTER_MAX_PLAYERS = 3,
+        MEDIUS_FILTER_GAME_LEVEL = 4,
+        MEDIUS_FILTER_PLAYER_SKILL_LEVEL = 5,
+        MEDIUS_FILTER_RULES_SET = 6,
+        MEDIUS_FILTER_GENERIC_FIELD_1 = 7,
+        MEDIUS_FILTER_GENERIC_FIELD_2 = 8,
+        MEDIUS_FILTER_GENERIC_FIELD_3 = 9,
+        MEDIUS_FILTER_LOBBY_WORLDID = 10,
+        MEDIUS_FILTER_GENERIC_FIELD_4 = 11,
+        MEDIUS_FILTER_GENERIC_FIELD_5 = 12,
+        MEDIUS_FILTER_GENERIC_FIELD_6 = 13,
+        MEDIUS_FILTER_GENERIC_FIELD_7 = 14,
+        MEDIUS_FILTER_GENERIC_FIELD_8 = 15,
+        ExtraMediusGameListFilterField = 0xffffff
+    } MediusGameListFilterField;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -330,6 +359,20 @@ public:
         SessionKey SKey;
         MediusUserAction UserAction;
     } MediusUpdateUserState;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusGameListFilterField FilterField;
+        int Mask;
+        MediusComparisonOperator ComparisonOperator;
+        int BaselineValue;
+    } MediusSetGameListFilterRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        unsigned int FilterID;
+    } MediusSetGameListFilterResponse;
 };
 
 
