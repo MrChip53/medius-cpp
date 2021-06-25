@@ -211,6 +211,13 @@ public:
     } NetAddressList;
 
     typedef enum {
+        KeepAlive,
+        JoinedChatWorld,
+        LeftGameWorld,
+        ExtraMediusUserAction = 0xffffff
+    } MediusUserAction;
+
+    typedef enum {
         NetConnectionNone = 0,
         NetConnectionTypeClientServerTCP = 1,
         NetConnectionTypePeerToPeerUDP = 2,
@@ -318,6 +325,11 @@ public:
         int GMT_time;
         MediusTimeZone Local_server_timezone;
     } MediusGetServerTimeResponse;
+
+    typedef struct {
+        SessionKey SKey;
+        MediusUserAction UserAction;
+    } MediusUpdateUserState;
 };
 
 

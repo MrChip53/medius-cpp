@@ -19,5 +19,6 @@
 #include "MediusMessages/MediusAccountLoginResponse.h"
 #include "MediusMessages/MediusPacket42.h"
 #include "MediusMessages/MediusGetServerTimeResponse.h"
+#include "MediusMessages/MediusUpdateUserState.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
