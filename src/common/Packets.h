@@ -322,6 +322,12 @@ public:
         ExtraMediusClanInvitationsResponseStatus = 0xffffff
     } MediusClanInvitationsResponseStatus;
 
+    typedef enum {
+        MEDIUS_ASCENDING,
+        MEDIUS_DESCENDING,
+        ExtraMediusSortOrder = 0xffffff
+    } MediusSortOrder;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -575,6 +581,26 @@ public:
         char LeaderAccountName[ACCOUNTNAME_MAXLEN];
         char EndOfList;
     } MediusCheckMyClanInvitationsResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        int ClanID;
+        int LadderStatIndex;
+        MediusSortOrder SortOrder;
+    } MediusGetClanMemberList_ExtraInfoRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int AccountID;
+        char AccountName[ACCOUNTNAME_MAXLEN];
+        char Stats[ACCOUNTSTATS_MAXLEN];
+        MediusPlayerOnlineState OnlineState;
+        int LadderStat;
+        unsigned int LadderPosition;
+        unsigned int TotalRankings;
+        char EndOfList;
+    } MediusGetClanMemberList_ExtraInfoResponse;
 };
 
 
