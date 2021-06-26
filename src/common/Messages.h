@@ -33,5 +33,6 @@
 #include "MediusMessages/MediusAccountGetIDResponse.h"
 #include "MediusMessages/MediusAddToIgnoreListResponse.h"
 #include "MediusMessages/MediusJoinChannelResponse.h"
+#include "MediusMessages/MediusTextFilterResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
