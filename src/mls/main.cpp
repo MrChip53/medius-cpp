@@ -33,6 +33,7 @@ int main() {
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::GetBuddyInvitations, MediusGetBuddyInvitationsResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::UpdateLadderStatsWide, MediusUpdateLadderStatsWideRequest::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::GameList_ExtraInfo, MediusGameList_ExtraInfoResponse::process);
+    mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobbyExt, PacketInfo::LobbyExt::CreateGame, MediusCreateGameResponse::process);
 
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::SetLocalizationParams, MediusSetLocalizationParamsResponse::process);
     mHandler->RegisterMediusMessageHandler(PacketInfo::MessageClassLobby, PacketInfo::Lobby::UpdateUserState, MediusUpdateUserState::process);

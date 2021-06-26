@@ -23,10 +23,13 @@ typedef struct {
     int GenericField6;
     int GenericField7;
     int GenericField8;
-    MediusWorldSecurityLevelType SecurityLevel;
-    MediusWorldStatus WorldStatus;
-    MediusGameHostType GameHostType;
+    Packets::MediusWorldSecurityLevelType SecurityLevel;
+    Packets::MediusWorldStatus WorldStatus;
+    Packets::MediusGameHostType GameHostType;
+    Packets::MediusWorldAttributesType Attributes;
     char GameName[GAMENAME_MAXLEN];
+    char GamePassword[GAMEPASSWORD_MAXLEN];
+    char SpectatorPassword[GAMEPASSWORD_MAXLEN];
     char GameStats[GAMESTATS_MAXLEN];
 } Game;
 

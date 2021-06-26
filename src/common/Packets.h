@@ -368,6 +368,13 @@ public:
         ExtraMediusWorldStatus = 0xffffff
     } MediusWorldStatus;
 
+    typedef enum {
+        MediusJoinAsPlayer = 0,
+        MediusJoinAsSpectator = 1,
+        MediusJoinAsMassSpectator = 2,
+        ExtraMediusJoinType = 0xffffff
+    } MediusJoinType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -752,6 +759,24 @@ public:
         MediusCallbackStatus StatusCode;
         int MediusWorldID;
     } MediusCreateGameResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int MediusWorldID;
+        MediusJoinType JoinType;
+        char GamePassword[GAMEPASSWORD_MAXLEN];
+        MediusGameHostType GameHostType;
+        RSAKey pubKey;
+        NetAddressList AddressList;
+    } MediusJoinGameRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        MediusGameHostType GameHostType;
+        NetConnectionInfo ConnectInfo;
+    } MediusJoinGameResponse;
 };
 
 

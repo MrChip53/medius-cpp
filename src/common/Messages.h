@@ -35,5 +35,6 @@
 #include "MediusMessages/MediusJoinChannelResponse.h"
 #include "MediusMessages/MediusTextFilterResponse.h"
 #include "MediusMessages/MediusGameList_ExtraInfoResponse.h"
+#include "MediusMessages/MediusCreateGameResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H
