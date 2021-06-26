@@ -15,7 +15,7 @@ public:
     const static uint8_t RespType = 0x07;
     const static uint8_t RespId = 0x07;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         std::vector<struct iovec> iovs;
 
         //TODO make this packet fully dynamic in its own class

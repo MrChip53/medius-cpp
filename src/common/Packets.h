@@ -27,6 +27,7 @@
 #define GAMENAME_MAXLEN WORLDNAME_MAXLEN
 #define WORLDSTATS_MAXLEN 256
 #define GAMESTATS_MAXLEN WORLDSTATS_MAXLEN
+#define GAMEPASSWORD_MAXLEN WORLDPASSWORD_MAXLEN
 
 class Packets {
 public:
@@ -348,6 +349,14 @@ public:
         MediusGameHostClientServerAuxUDP = 4,
         ExtraMediusGameHost = 0xffffff
     } MediusGameHostType;
+
+    typedef enum {
+        GAME_WORLD_NONE = 0,
+        GAME_WORLD_ALLOW_REBROADCAST = (1 << 0),
+        GAME_WORLD_ALLOW_SPECTATOR = (1 << 1),
+        GAME_WORLD_INTERNAL = (1 << 2),
+        GAME_WORLD_EXTRA = 0xFFFFFF
+    } MediusWorldAttributesType;
 
     typedef enum {
         WorldInactive,
@@ -713,6 +722,36 @@ public:
         char GameStats[GAMESTATS_MAXLEN];
         char EndOfList;
     } MediusGameList_ExtraInfoResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int ApplicationID;
+        int MinPlayers;
+        int MaxPlayers;
+        int GameLevel;
+        char GameName[GAMENAME_MAXLEN];
+        char GamePassword[GAMEPASSWORD_MAXLEN];
+        char SpectatorPassword[GAMEPASSWORD_MAXLEN];
+        int PlayerSkillLevel;
+        int RulesSet;
+        int GenericField1;
+        int GenericField2;
+        int GenericField3;
+        int GenericField4;
+        int GenericField5;
+        int GenericField6;
+        int GenericField7;
+        int GenericField8;
+        MediusGameHostType GameHostType;
+        MediusWorldAttributesType Attributes;
+    } MediusCreateGameRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int MediusWorldID;
+    } MediusCreateGameResponse;
 };
 
 

@@ -13,7 +13,7 @@ public:
     const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobbyExt;
     const static PacketInfo::LobbyExt::Packet RespId = PacketInfo::LobbyExt::UnknownPacket_41Response;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         std::vector<struct iovec> iovs;
         // TODO this should not be static
         auto packet_data = Util::HexToBytes("0a220004420000000000000000000000000000000000000000000000000000000012bd4160");

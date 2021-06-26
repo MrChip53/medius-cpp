@@ -12,7 +12,7 @@
 class MediusUpdateUserState {
 public:
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         uData->State() = ((Packets::MediusUpdateUserState *) &data.mediusMessage[2])->UserAction;
 
         return std::vector<struct iovec>();

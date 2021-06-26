@@ -12,7 +12,7 @@ class RT_MSG_CLIENT_DISCONNECT_WITH_REASON {
 public:
     const static uint8_t Request = 0x20;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         close(uData->SocketFd());
         uData->Closed() = true;
 

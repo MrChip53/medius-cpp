@@ -14,7 +14,7 @@ public:
     const static uint8_t Request = 0x24;
     const static uint8_t Response = 0x25;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         iovec iov;
 
         Packets::RT_MSG_SERVER_HELLO *packet = static_cast<Packets::RT_MSG_SERVER_HELLO *>(malloc(sizeof(Packets::RT_MSG_SERVER_HELLO)));

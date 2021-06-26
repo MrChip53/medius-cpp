@@ -12,7 +12,7 @@ public:
     const static uint8_t Request = 0x05;
     const static uint8_t Response = 0x05;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         char* packet = static_cast<char *>(malloc(sizeof(char) * data.length));
         memcpy(packet, data.mediusMessage, data.length);
 

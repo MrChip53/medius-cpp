@@ -11,7 +11,7 @@
 
 class MediusAccountStatsRequest {
 public:
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         // TODO verify session key
         memcpy(uData->Stats, ((Packets::MediusAccountUpdateStatsRequest *) &data.mediusMessage[2])->Stats, ACCOUNTSTATS_MAXLEN);
 

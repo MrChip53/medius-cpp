@@ -11,7 +11,7 @@ public:
     const static uint8_t Request = 0x21;
     const static uint8_t Response = 0x1a;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         iovec iov;
 
         auto packet_data = Util::HexToBytes("0100");

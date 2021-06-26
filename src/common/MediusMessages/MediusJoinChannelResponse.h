@@ -13,7 +13,7 @@ public:
     const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobby;
     const static PacketInfo::Lobby::Packet RespId = PacketInfo::Lobby::JoinChannelResponse;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         Packets::NetConnectionInfo nci;
         Packets::NetAddressList nal;
         Packets::NetAddress na1;

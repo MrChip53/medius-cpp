@@ -28,11 +28,11 @@ void MediusHandler::ParseMessages(char *message) {
     } while (pos < sizeof(message) - 1);
 }
 
-void MediusHandler::RegisterRTMessageHandler(int msgRequest, std::vector<struct iovec> (*msg_func)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)) {
+void MediusHandler::RegisterRTMessageHandler(int msgRequest, std::vector<struct iovec> (*msg_func)(MediusHandler::MediusMessage, MediusHandler*, const std::shared_ptr<UserData>&)) {
     RTMessageCallbacks[msgRequest].push_back(msg_func);
 }
 
-void MediusHandler::RegisterMediusMessageHandler(int msgClass, int msgId, std::vector<struct iovec> (*msg_func)(MediusHandler::MediusMessage, const std::shared_ptr<UserData>&)) {
+void MediusHandler::RegisterMediusMessageHandler(int msgClass, int msgId, std::vector<struct iovec> (*msg_func)(MediusHandler::MediusMessage, MediusHandler*, const std::shared_ptr<UserData>&)) {
     MediusMessageCallbacks[msgClass][msgId].push_back(msg_func);
 }
 
@@ -59,7 +59,7 @@ std::vector<struct iovec> MediusHandler::ProcessRTMessages(const std::shared_ptr
         } else {
             for (auto &msgCallback : RTMessageCallbacks[rt_message.command]) {
                 if (msgCallback != nullptr) {
-                    std::vector<struct iovec> rt_iovs = msgCallback(rt_message, uData);
+                    std::vector<struct iovec> rt_iovs = msgCallback(rt_message, this, uData);
                     iovs.insert(iovs.end(), rt_iovs.begin(), rt_iovs.end());
                 }
             }
@@ -98,10 +98,14 @@ std::vector<struct iovec> MediusHandler::ProcessMediusMessage(MediusHandler::Med
 
     for (auto & msgCallback : MediusMessageCallbacks[type][id]) {
         if (msgCallback != nullptr) {
-            std::vector<struct iovec> rt_iovs = msgCallback(message, uData);
+            std::vector<struct iovec> rt_iovs = msgCallback(message, this, uData);
             iovs.insert(iovs.end(), rt_iovs.begin(), rt_iovs.end());
         }
     }
 
     return iovs;
+}
+
+void MediusHandler::CreateApp(int AppID) {
+
 }

@@ -13,7 +13,7 @@ public:
     const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobbyExt;
     const static PacketInfo::LobbyExt::Packet RespId = PacketInfo::LobbyExt::GetServerTimeResponse;
 
-    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
+    static std::vector<struct iovec> process(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData) {
         Packets::MediusGetServerTimeResponse *packet = static_cast<Packets::MediusGetServerTimeResponse *>(malloc(
                 sizeof(Packets::MediusGetServerTimeResponse)));
         memset(packet, 0, sizeof(Packets::MediusGetServerTimeResponse));
