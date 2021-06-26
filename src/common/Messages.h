@@ -34,5 +34,6 @@
 #include "MediusMessages/MediusAddToIgnoreListResponse.h"
 #include "MediusMessages/MediusJoinChannelResponse.h"
 #include "MediusMessages/MediusTextFilterResponse.h"
+#include "MediusMessages/MediusGameList_ExtraInfoResponse.h"
 
 #endif //MEDIUS_MUIS_SERVER_MESSAGES_H

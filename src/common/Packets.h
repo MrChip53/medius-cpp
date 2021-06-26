@@ -24,6 +24,9 @@
 #define WORLDPASSWORD_MAXLEN 32
 #define LOBBYPASSWORD_MAXLEN WORLDPASSWORD_MAXLEN
 #define CHATMESSAGE_MAXLEN 64
+#define GAMENAME_MAXLEN WORLDNAME_MAXLEN
+#define WORLDSTATS_MAXLEN 256
+#define GAMESTATS_MAXLEN WORLDSTATS_MAXLEN
 
 class Packets {
 public:
@@ -336,6 +339,25 @@ public:
         MediusTextFilterReplace = 1,
         ExtraMediusTextFilter = 0xffffff
     } MediusTextFilterType;
+
+    typedef enum {
+        MediusGameHostClientServer = 0,
+        MediusGameHostIntegratedServer = 1,
+        MediusGameHostPeerToPeer = 2,
+        MediusGameHostLANPlay = 3,
+        MediusGameHostClientServerAuxUDP = 4,
+        ExtraMediusGameHost = 0xffffff
+    } MediusGameHostType;
+
+    typedef enum {
+        WorldInactive,
+        WorldStaging,
+        WorldActive,
+        WorldClosed,
+        WorldPendingCreation,
+        WorldPendingConnectToGame,
+        ExtraMediusWorldStatus = 0xffffff
+    } MediusWorldStatus;
 
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
@@ -659,6 +681,38 @@ public:
         char Text[CHATMESSAGE_MAXLEN];
         MediusCallbackStatus StatusCode;
     } MediusTextFilterResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        unsigned short PageID;
+        unsigned short PageSize;
+    } MediusGameList_ExtraInfoRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        int MediusWorldID;
+        unsigned short PlayerCount;
+        unsigned short MinPlayers;
+        unsigned short MaxPlayers;
+        int GameLevel;
+        int PlayerSkillLevel;
+        int RulesSet;
+        int GenericField1;
+        int GenericField2;
+        int GenericField3;
+        int GenericField4;
+        int GenericField5;
+        int GenericField6;
+        int GenericField7;
+        int GenericField8;
+        MediusWorldSecurityLevelType SecurityLevel;
+        MediusWorldStatus WorldStatus;
+        MediusGameHostType GameHostType;
+        char GameName[GAMENAME_MAXLEN];
+        char GameStats[GAMESTATS_MAXLEN];
+        char EndOfList;
+    } MediusGameList_ExtraInfoResponse;
 };
 
 

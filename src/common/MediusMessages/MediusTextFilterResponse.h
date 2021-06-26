@@ -19,7 +19,7 @@ public:
         memset(packet, 0, sizeof(Packets::MediusTextFilterResponse));
         // TODO check session key
         memcpy(packet->MsgID, ((Packets::MediusTextFilterRequest *)&data.mediusMessage[2])->MsgID, MESSAGEID_MAXLEN);
-        packet->StatusCode = Packets::MediusCallbackStatus::MediusSuccess;
+        packet->StatusCode = Packets::MediusCallbackStatus::MediusPass;
         memcpy(packet->Text, ((Packets::MediusTextFilterRequest *)&data.mediusMessage[2])->Text, CHATMESSAGE_MAXLEN);
 
 
