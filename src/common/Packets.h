@@ -21,6 +21,9 @@
 #define LADDERSTATSWIDE_MAXLEN 100
 #define CLANINVITERESPONSEMSG_MAXLEN 200
 #define CLANMSG_MAXLEN 200
+#define WORLDPASSWORD_MAXLEN 32
+#define LOBBYPASSWORD_MAXLEN WORLDPASSWORD_MAXLEN
+#define CHATMESSAGE_MAXLEN 64
 
 class Packets {
 public:
@@ -328,6 +331,12 @@ public:
         ExtraMediusSortOrder = 0xffffff
     } MediusSortOrder;
 
+    typedef enum {
+        MediusTextFilterPassFail = 0,
+        MediusTextFilterReplace = 1,
+        ExtraMediusTextFilter = 0xffffff
+    } MediusTextFilterType;
+
     typedef char MessageID[MESSAGEID_MAXLEN];
     typedef char SessionKey[SESSIONKEY_MAXLEN];
     typedef char AccessKey[ACCESSKEY_MAXLEN];
@@ -624,6 +633,32 @@ public:
         MessageID MsgID;
         MediusCallbackStatus StatusCode;
     } MediusAddToIgnoreListResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int MediusWorldID;
+        char LobbyChannelPassword[LOBBYPASSWORD_MAXLEN];
+    } MediusJoinChannelRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+        NetConnectionInfo ConnectInfo;
+    } MediusJoinChannelResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        MediusTextFilterType TextFilterType;
+        char Text[CHATMESSAGE_MAXLEN];
+    } MediusTextFilterRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        char Text[CHATMESSAGE_MAXLEN];
+        MediusCallbackStatus StatusCode;
+    } MediusTextFilterResponse;
 };
 
 

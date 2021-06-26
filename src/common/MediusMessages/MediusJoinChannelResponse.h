@@ -1,22 +1,19 @@
 //
-// Created by chris on 6/24/21.
+// Created by chris on 6/25/21.
 //
 
-#ifndef MEDIUS_MLS_SERVER_MEDIUSACCOUNTLOGINRESPONSE_H
-#define MEDIUS_MLS_SERVER_MEDIUSACCOUNTLOGINRESPONSE_H
+#ifndef MEDIUS_MLS_SERVER_MEDIUSJOINCHANNELRESPONSE_H
+#define MEDIUS_MLS_SERVER_MEDIUSJOINCHANNELRESPONSE_H
 
 #include "../PacketIds.h"
 #include "../Packets.h"
-#include "../MediusHandler.h"
 
-class MediusAccountLoginResponse {
+class MediusJoinChannelResponse {
 public:
     const static PacketInfo::PacketType RespType = PacketInfo::MessageClassLobby;
-    const static PacketInfo::Lobby::Packet RespId = PacketInfo::Lobby::AccountLoginResponse;
+    const static PacketInfo::Lobby::Packet RespId = PacketInfo::Lobby::JoinChannelResponse;
 
     static std::vector<struct iovec> process(MediusHandler::MediusMessage data, const std::shared_ptr<UserData>& uData) {
-        std::vector<struct iovec> iovs;
-
         Packets::NetConnectionInfo nci;
         Packets::NetAddressList nal;
         Packets::NetAddress na1;
@@ -26,18 +23,15 @@ public:
         memset(&na1, 0, sizeof(Packets::NetAddress));
         memset(&na2, 0, sizeof(Packets::NetAddress));
 
-
-        auto *packet = static_cast<Packets::MediusAccountLoginResponse *>(malloc(sizeof(Packets::MediusAccountLoginResponse)));
-        memset(packet, 0, sizeof(Packets::MediusAccountLoginResponse));
-        memcpy(packet->MsgID, ((Packets::MediusAccountLoginRequest *)&data.mediusMessage[2])->MsgID, MESSAGEID_MAXLEN);
-        // TODO verify account login
-        uData->Username() = ((Packets::MediusAccountLoginRequest *)&data.mediusMessage[2])->AccountName;
-        packet->AccountID = 1;
-        packet->AccountType = Packets::MediusMasterAccount;
-        packet->MediusWorldID = 1;
+        Packets::MediusJoinChannelResponse *packet = static_cast<Packets::MediusJoinChannelResponse *>(malloc(
+                sizeof(Packets::MediusJoinChannelResponse)));
+        memset(packet, 0, sizeof(Packets::MediusJoinChannelResponse));
+        // TODO check session key, grab info from a DB ofc
+        memcpy(packet->MsgID, ((Packets::MediusJoinChannelRequest *) &data.mediusMessage[2])->MsgID, MESSAGEID_MAXLEN);
+        packet->StatusCode = Packets::MediusCallbackStatus::MediusSuccess;
 
         // TODO abstract all this net connect info into functions
-        nci.WorldID = 1;
+        nci.WorldID = 2;
         nci.Type = Packets::NetConnectionTypeClientServerTCP;
         strcpy(nci.AKey, "TestAccess");
         memcpy(nci.SKey, ((Packets::MediusAccountLoginRequest *)&data.mediusMessage[2])->SKey, sizeof(Packets::SessionKey));
@@ -53,12 +47,10 @@ public:
         nci.AddressList = nal;
 
         memcpy(&packet->ConnectInfo, &nci, sizeof(Packets::NetConnectionInfo));
-        packet->StatusCode = Packets::MediusCallbackStatus::MediusSuccess;
 
-        return Util::CreateMediusIovec(packet, sizeof(Packets::MediusAccountLoginResponse), RespType, RespId);
+        return Util::CreateMediusIovec(packet, sizeof(Packets::MediusJoinChannelResponse), RespType, RespId);
     }
-
 };
 
 
-#endif //MEDIUS_MLS_SERVER_MEDIUSACCOUNTLOGINRESPONSE_H
+#endif //MEDIUS_MLS_SERVER_MEDIUSJOINCHANNELRESPONSE_H
