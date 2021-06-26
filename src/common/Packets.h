@@ -613,6 +613,17 @@ public:
         int AccountID;
         MediusCallbackStatus StatusCode;
     } MediusAccountGetIDResponse;
+
+    typedef struct {
+        MessageID MsgID;
+        SessionKey SKey;
+        int IgnoreAccountID;
+    } MediusAddToIgnoreListRequest;
+
+    typedef struct {
+        MessageID MsgID;
+        MediusCallbackStatus StatusCode;
+    } MediusAddToIgnoreListResponse;
 };
 
 
