@@ -32,7 +32,9 @@ public:
     void RegisterMediusMessageHandler(int msgClass, int msgId, std::vector<struct iovec>(*msg_func)(MediusHandler::MediusMessage data, MediusHandler* handler, const std::shared_ptr<UserData>& uData));
 
     // TODO change this to be an App class that contains games with other info about the app like channels etc
-    std::unordered_map<int, std::vector<std::shared_ptr<Game>>> AppGames;
+    std::unordered_map<int, std::unordered_map<int, std::shared_ptr<Game>>> AppGames;
+
+    int curWorldIDCounter = 10;
 
 private:
     std::vector<MediusHandler::MediusMessage> rt_messages;

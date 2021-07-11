@@ -777,6 +777,27 @@ public:
         MediusGameHostType GameHostType;
         NetConnectionInfo ConnectInfo;
     } MediusJoinGameResponse;
+
+    typedef struct {
+        int MediusWorldID;
+        int PlayerCount;
+        char GameName[GAMENAME_MAXLEN];
+        char GameStats[GAMESTATS_MAXLEN];
+        int MinPlayers;
+        int MaxPlayers;
+        int GameLevel;
+        int PlayerSkillLevel;
+        int RulesSet;
+        int GenericField1;
+        int GenericField2;
+        int GenericField3;
+        int GenericField4;
+        int GenericField5;
+        int GenericField6;
+        int GenericField7;
+        int GenericField8;
+        MediusWorldStatus WorldStatus;
+    } MediusWorldReport;
 };
 
 

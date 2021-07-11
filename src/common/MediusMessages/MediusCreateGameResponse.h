@@ -21,7 +21,7 @@ public:
         // TODO Check session key
         memcpy(packet->MsgID, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->MsgID, MESSAGEID_MAXLEN);
         packet->StatusCode = Packets::MediusCallbackStatus::MediusSuccess;
-        packet->MediusWorldID = handler->AppGames[uData->AppId()].size();
+        packet->MediusWorldID = handler->curWorldIDCounter;
 
         std::shared_ptr<Game> newGame(new Game);
 
@@ -48,7 +48,9 @@ public:
         newGame->RulesSet = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->RulesSet;
         newGame->Attributes = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->Attributes;
 
-        handler->AppGames[uData->AppId()].push_back(std::move(newGame));
+        handler->curWorldIDCounter++;
+
+        handler->AppGames[uData->AppId()][packet->MediusWorldID] = std::move(newGame);
 
         return Util::CreateMediusIovec(packet, sizeof(Packets::MediusCreateGameResponse), RespType, RespId);
     }
