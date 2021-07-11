@@ -25,6 +25,8 @@ public:
 
         std::shared_ptr<Game> newGame(new Game);
 
+        memset(newGame.get(), 0, sizeof(Game));
+
         newGame->MaxPlayers = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->MaxPlayers;
         newGame->MinPlayers = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->MinPlayers;
         newGame->MediusWorldID = packet->MediusWorldID;
