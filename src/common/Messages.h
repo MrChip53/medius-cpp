@@ -33,6 +33,7 @@
 #include "MediusMessages/MediusAccountGetIDResponse.h"
 #include "MediusMessages/MediusAddToIgnoreListResponse.h"
 #include "MediusMessages/MediusJoinChannelResponse.h"
+#include "MediusMessages/MediusJoinGameResponse.h"
 #include "MediusMessages/MediusTextFilterResponse.h"
 #include "MediusMessages/MediusGameList_ExtraInfoResponse.h"
 #include "MediusMessages/MediusCreateGameResponse.h"

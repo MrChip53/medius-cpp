@@ -5,8 +5,8 @@
 #ifndef MEDIUS_MUIS_SERVER_RT_MSG_SERVER_HELLO_H
 #define MEDIUS_MUIS_SERVER_RT_MSG_SERVER_HELLO_H
 
+#include <cstring>
 #include "../Packets.h"
-#include "../../dme/MediusMessageParser.h"
 
 class RT_MSG_SERVER_HELLO {
 

@@ -38,10 +38,11 @@ public:
         newGame->GenericField7 = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GenericField7;
         newGame->GenericField8 = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GenericField8;
 
-        newGame->GameHostType = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameHostType;
-        strcpy(newGame->GameName, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameName);
-        strcpy(newGame->GamePassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GamePassword);
-        strcpy(newGame->SpectatorPassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->SpectatorPassword);
+        // TODO change back when UDP AUX is done
+        newGame->GameHostType = Packets::MediusGameHostClientServer;
+        strncpy(newGame->GameName, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameName, GAMENAME_MAXLEN);
+        strncpy(newGame->GamePassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GamePassword, GAMEPASSWORD_MAXLEN);
+        strncpy(newGame->SpectatorPassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->SpectatorPassword, GAMEPASSWORD_MAXLEN);
         newGame->GameLevel = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameLevel;
         newGame->PlayerSkillLevel = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->PlayerSkillLevel;
         newGame->RulesSet = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->RulesSet;

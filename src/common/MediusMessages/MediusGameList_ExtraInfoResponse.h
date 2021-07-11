@@ -7,6 +7,7 @@
 
 #include "../PacketIds.h"
 #include "../Packets.h"
+#include "../MediusHandler.h"
 
 class MediusGameList_ExtraInfoResponse {
 public:
