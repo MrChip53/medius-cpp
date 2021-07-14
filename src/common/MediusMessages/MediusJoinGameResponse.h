@@ -33,7 +33,7 @@ public:
 
         // TODO abstract all this net connect info into functions
         nci.WorldID = ((Packets::MediusJoinGameRequest *) &data.mediusMessage[2])->MediusWorldID;
-        nci.Type = Packets::NetConnectionTypeClientServerTCP;
+        nci.Type = Packets::NetConnectionTypeClientServerTCPAuxUDP;
         strcpy(nci.AKey, "TestAccess");
         memcpy(nci.SKey, ((Packets::MediusJoinGameRequest *)&data.mediusMessage[2])->SKey, sizeof(Packets::SessionKey));
 

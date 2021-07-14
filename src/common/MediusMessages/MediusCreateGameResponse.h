@@ -41,7 +41,7 @@ public:
         newGame->GenericField8 = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GenericField8;
 
         // TODO change back when UDP AUX is done
-        newGame->GameHostType = Packets::MediusGameHostClientServer;
+        newGame->GameHostType = ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameHostType;
         strncpy(newGame->GameName, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GameName, GAMENAME_MAXLEN);
         strncpy(newGame->GamePassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->GamePassword, GAMEPASSWORD_MAXLEN);
         strncpy(newGame->SpectatorPassword, ((Packets::MediusCreateGameRequest *) &data.mediusMessage[2])->SpectatorPassword, GAMEPASSWORD_MAXLEN);

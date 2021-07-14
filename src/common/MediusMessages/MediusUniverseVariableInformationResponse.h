@@ -19,7 +19,7 @@ public:
         std::vector<struct iovec> iovs;
 
         //TODO make this packet fully dynamic in its own class
-        std::string svoUrl = "http://socomftb2.psp.online.scea.com:10061/SOCOMFTB2_SVML/index.jsp?languageid=1";
+        std::string svoUrl = "http://svo.ps2rewired.com:10060/SCA/blank.jsp";
 
         std::ostringstream svoStr;
         svoStr << "041e000000000000000000000000000000000000000000" << std::hex << (int)svoUrl.size() << Util::ToHex(svoUrl);
@@ -32,14 +32,14 @@ public:
         std::ostringstream uniStr;
         uniStr << "0afe0100020411e8010200000000212a77b502000000000000000000000000000000000000000000000000000000000000007e03000025000000"
                << Util::ToHexFixedLength("Socom Cafe", 128)
-               << Util::ToHexFixedLength("192.168.1.93", 128)
+               << Util::ToHexFixedLength("192.168.1.93"/*"135.148.144.253"*/, 128)
                << Util::ReverseHexString(Util::Int32ToHex(10075)) // Port
                << Util::ToHexFixedLength("Chip's Server Yo!", 60)
                << "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000ae30000020411cd000200010000212a77b5020000e801000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
                << Util::ReverseHexString(Util::Int32ToHex(1)) // Status
                << Util::ReverseHexString(Util::Int32ToHex(17)) // Online
                << Util::ReverseHexString(Util::Int32ToHex(69420)) // Max
-               << Util::ToHexFixedLength("v1.00 http://socomftb2.psp.online.scea.com:10061/SOCOMFTB2_SVML/download/EBOOT.PBP", 128)
+               << Util::ToHexFixedLength("v1.00 http://socomftb2.psp.online.scea.com:10061/SOCOMFTB2_SVML/download/DOWNLOAD.DAT", 128)
                << "01000000";
         auto universe_packet = Util::HexToBytes(uniStr.str());
         len = std::get<0>(universe_packet);

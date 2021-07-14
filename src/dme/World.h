@@ -12,7 +12,15 @@
 #include <vector>
 #include <iostream>
 #include <atomic>
+#include <netinet/in.h>
 #include "../common/RTPacket.h"
+
+typedef enum {
+    FLAG_BROADCAST = 1,
+    FLAG_SINGLE = 4,
+    FLAG_LIST = 2,
+    FLAG_NOTIF = 8
+};
 
 typedef struct {
     char message[512];
@@ -25,7 +33,9 @@ public:
     std::atomic_uint16_t clientIndex;
     std::atomic_uchar recvFlags;
     unsigned long long authTime;
-    std::vector<Message*> messageQueue;
+    unsigned short scertId;
+    sockaddr_in udpSock;
+    int CurWorldId;
 
     pthread_mutex_t messageQLock;
 
@@ -35,29 +45,8 @@ public:
         pthread_mutex_init(&messageQLock, NULL);
     }
 
-    /*void QueueMessage(Message *message) {
-        pthread_mutex_lock(&messageQLock);
-
-        messageQueue.push_back(message);
-
-        pthread_mutex_unlock(&messageQLock);
-    }*/
-
     void SendMessage(char *message, int length) {
         send(this->socket, message, length, 0);
-    }
-
-    void ProcessQueue() {
-        pthread_mutex_lock(&messageQLock);
-
-        for(auto & message : messageQueue) {
-            send(socket, message->message, message->length, 0);
-            free(message);
-        }
-
-        messageQueue.clear();
-
-        pthread_mutex_unlock(&messageQLock);
     }
 
     void SetFlags(unsigned char flags) {
@@ -93,6 +82,25 @@ public:
         return std::make_tuple(-1, nullptr);
     }
 
+    void SetPlayerUdpSocket(int scertid, sockaddr_in udpSocket) {
+        //todo change the hardcoded 16
+        for (unsigned short i = 0; i < 16; i++) {
+            if (this->_gameSockets[i] && this->_gameSockets[i]->scertId == scertid) {
+                this->_gameSockets[i]->udpSock = udpSocket;
+                return;
+            }
+        }
+    }
+
+    Player * GetPlayerByScertId(int scertid) {
+        //todo change the hardcoded 16
+        for (unsigned short i = 0; i < 16; i++) {
+            if (this->_gameSockets[i] && this->_gameSockets[i]->scertId == scertid) {
+                return this->_gameSockets[i];
+            }
+        }
+    }
+
     unsigned short GenerateNewScertId() {
         this->_totalClients += 1;
         unsigned short sceId = this->_totalClients;
@@ -121,12 +129,11 @@ public:
 
         //todo change all these for loops to be < total online
         for(const auto& player : this->_gameSockets) {
-            //todo remove hardcoded flag value
             if (player == nullptr)
                 continue;
             if (player->clientIndex == clientIndex || !player->authTime)
                 continue;
-            if (!player->HasFlag(8))
+            if (!player->HasFlag(FLAG_NOTIF))
                 continue;
             player->SendMessage(packet_buffer, len + 3);
         }
@@ -147,11 +154,32 @@ public:
         rt_message->length = newLength + 3;
 
         for(const auto& player : this->_gameSockets) {
-            //todo remove hardcoded flag value
-            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || (player->recvFlags & 1) == 0)
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || !player->HasFlag(FLAG_BROADCAST))
                 continue;
             std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
             player->SendMessage(packet_buffer, newLength + 3);
+        }
+    }
+
+    void BroadcastUdpMessage(const char *message, unsigned short sourceIndex, unsigned short length, int serverSocket) {
+        int newLength = length + 2;
+
+        char packet_buffer[512];
+
+        packet_buffer[0] = 0x03;
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
+
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
+        for(const auto& player : this->_gameSockets) {
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || !player->HasFlag(FLAG_BROADCAST))
+                continue;
+            std::cout << "Sent broadcast message out to client " << player->clientIndex << std::endl;
+            sendto(serverSocket, packet_buffer, 3 + newLength, MSG_CONFIRM, (const struct sockaddr *)&player->udpSock, sizeof(player->udpSock));
         }
     }
 
@@ -169,9 +197,30 @@ public:
         memcpy(rt_message->message, packet_buffer, newLength + 3);
         rt_message->length = newLength + 3;
 
-        //todo remove hardcoded flag value, set player into player variable
-        if (this->_gameSockets[targetIndex] != nullptr || !this->_gameSockets[targetIndex]->authTime || this->_gameSockets[targetIndex]->clientIndex == sourceIndex || (this->_gameSockets[targetIndex]->recvFlags & 4) == 0)
-            this->_gameSockets[targetIndex]->SendMessage(packet_buffer, newLength + 3);
+        Player *player = this->_gameSockets[targetIndex];
+
+        if (player != nullptr || !player->authTime || player->clientIndex == sourceIndex || player->HasFlag(FLAG_SINGLE))
+            player->SendMessage(packet_buffer, newLength + 3);
+    }
+
+    void SendUdpAppSingle(unsigned short targetIndex, unsigned short sourceIndex, const char *message, unsigned short length, int serverSocket) {
+        char packet_buffer[512];
+
+        unsigned short newLength = length + 2;
+
+        packet_buffer[0] = 0x03;
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
+
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
+        Player *player = this->_gameSockets[targetIndex];
+
+        if (player != nullptr || !player->authTime || player->clientIndex == sourceIndex || player->HasFlag(FLAG_SINGLE))
+            sendto(serverSocket, packet_buffer, 3 + newLength, MSG_CONFIRM, (const struct sockaddr *)&player->udpSock, sizeof(player->udpSock));
     }
 
     void SendTcpAppList(const char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length) {
@@ -189,10 +238,31 @@ public:
         rt_message->length = newLength + 3;
 
         for(const auto& player : this->_gameSockets) {
-            //todo remove hardcoded flag value
-            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || (player->recvFlags & 2) == 0)
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || player->HasFlag(FLAG_LIST))
                 continue;
             player->SendMessage(packet_buffer, newLength + 3);
+        }
+    }
+
+    void SendUdpAppList(const char *message, unsigned short sourceIndex, std::vector<int> targets, unsigned short length, int serverSocket) {
+        int newLength = length + 2;
+
+        char packet_buffer[512];
+
+        packet_buffer[0] = 0x03;
+        memcpy(&packet_buffer[1], &newLength, sizeof(unsigned short));
+        memcpy(&packet_buffer[3], &sourceIndex, sizeof(unsigned short));
+        memcpy(&packet_buffer[5], message, length);
+
+        Message *rt_message = (Message *)malloc(sizeof(Message));
+        memcpy(rt_message->message, packet_buffer, newLength + 3);
+        rt_message->length = newLength + 3;
+
+        for(const auto& player : this->_gameSockets) {
+            if (player == nullptr || player->clientIndex == sourceIndex || !player->authTime || std::find(targets.begin(), targets.end(), player->clientIndex) == targets.end() || player->HasFlag(FLAG_LIST))
+                continue;
+
+            sendto(serverSocket, packet_buffer, 3 + newLength, MSG_CONFIRM, (const struct sockaddr *)&player->udpSock, sizeof(player->udpSock));
         }
     }
 };

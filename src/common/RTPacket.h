@@ -33,4 +33,26 @@ typedef struct {
     char RSAKey[64];
 } RT_MSG_SERVER_CONNECT_NOTIFY;
 
+typedef struct {
+    char IP[16];
+    ushort port;
+} __attribute__((packed)) RT_MSG_SERVER_INFO_AUX_UDP;
+
+typedef struct {
+    uint32_t WorldId;
+    int ApplicationId;
+    char IP[16];
+    uint16_t PlayerId;
+    uint16_t ScertId;
+    uint16_t UNK_26;
+} RT_MSG_CLIENT_CONNECT_AUX_UDP;
+
+typedef struct {
+    uint16_t PlayerId;
+    uint32_t ScertId;
+    uint16_t PlayerCount;
+    char IP[16];
+    uint16_t port;
+} __attribute__((packed)) RT_MSG_SERVER_CONNECT_ACCEPT_AUX_UDP;
+
 #endif //LIBUV_RTPACKET_H
